@@ -38,7 +38,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       email,
       name: 'John Doe',
       phone: '+372 5555 5555',
-      role: email.includes('admin') ? 'admin' : 'client',
+      // role: email.includes('admin') ? 'admin' : 'client',
+      // role: email === 'admin@sasha.com' ? 'admin' : 'client', //TODO: revert when implement auth!
+      role: 'admin',
     };
     setUser(mockUser);
     setIsGuest(false);

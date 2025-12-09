@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { LanguageProvider } from './contexts/LanguageContext';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { AuthProvider,
+    // useAuth //TODO: return back when implement auth!
+} from './contexts/AuthContext';
 import { Header } from './components/Header';
 import { Landing } from './pages/Landing';
 import { Login } from './pages/Login';
@@ -20,15 +22,15 @@ import { AdminSettings } from './pages/admin/AdminSettings';
 import { Toaster } from './components/ui/sonner';
 
 function ProtectedRoute({ children, adminOnly = false }: { children: React.ReactNode; adminOnly?: boolean }) {
-  const { user } = useAuth();
-
-  if (!user) {
-    return <Navigate to="/login" />;
-  }
-
-  if (adminOnly && user.role !== 'admin') {
-    return <Navigate to="/dashboard" />;
-  }
+  // const { user } = useAuth(); //TODO: return back when implement auth!
+  //
+  // if (!user) {
+  //   return <Navigate to="/login" />;
+  // }
+  //
+  // if (adminOnly && user.role !== 'admin') {
+  //   return <Navigate to="/dashboard" />;
+  // }
 
   return <>{children}</>;
 }

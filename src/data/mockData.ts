@@ -1,4 +1,4 @@
-import { Service, AddOn, DeliveryOptionType, Booking } from '../types/booking';
+import type {Service, AddOn, DeliveryOptionType, Booking} from '../types/booking';
 
 export const services: Service[] = [
   {
@@ -141,12 +141,12 @@ export const mockBookings: Booking[] = [
 export const generateTimeSlots = (daysAhead: number = 14) => {
   const slots = [];
   const times = ['09:00', '10:30', '12:00', '13:30', '15:00', '16:30'];
-  
+
   for (let day = 1; day <= daysAhead; day++) {
     const date = new Date();
     date.setDate(date.getDate() + day);
     const dateStr = date.toISOString().split('T')[0];
-    
+
     times.forEach((time, index) => {
       slots.push({
         id: `${dateStr}-${time}`,
@@ -156,6 +156,6 @@ export const generateTimeSlots = (daysAhead: number = 14) => {
       });
     });
   }
-  
+
   return slots;
 };
