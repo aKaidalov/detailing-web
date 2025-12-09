@@ -92,12 +92,6 @@ export const deliveryOptions: DeliveryOptionType[] = [
     applicableVehicles: ['car', 'van'],
   },
   {
-    id: 'airport',
-    name: 'Airport drop-off',
-    price: 20,
-    applicableVehicles: ['car', 'van'],
-  },
-  {
     id: 'myself',
     name: 'I bring it myself',
     price: 0,

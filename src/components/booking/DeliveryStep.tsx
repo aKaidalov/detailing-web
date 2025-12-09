@@ -2,7 +2,7 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import { Card, CardContent } from '../ui/card';
 import { DeliveryOption, VehicleType } from '../../types/booking';
 import { deliveryOptions } from '../../data/mockData';
-import { CheckCircle, Car, Plane, User } from 'lucide-react';
+import { CheckCircle, Car, User } from 'lucide-react';
 
 interface DeliveryStepProps {
   vehicleType: VehicleType;
@@ -21,8 +21,6 @@ export function DeliveryStep({ vehicleType, selected, onSelect }: DeliveryStepPr
     switch (id) {
       case 'pickup':
         return Car;
-      case 'airport':
-        return Plane;
       case 'myself':
         return User;
     }

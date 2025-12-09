@@ -2,7 +2,7 @@ export type VehicleType = 'motorcycle' | 'car' | 'van';
 
 export type ServiceType = 'fullWash' | 'exteriorWash' | 'interiorCleaning';
 
-export type DeliveryOption = 'pickup' | 'airport' | 'myself';
+export type DeliveryOption = 'pickup' | 'myself';
 
 export type BookingStatus = 'pending' | 'confirmed' | 'inProgress' | 'completed' | 'cancelled';
 

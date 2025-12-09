@@ -27,7 +27,7 @@ const translations = {
     'common.filter': 'Filter',
     'common.status': 'Status',
     'common.actions': 'Actions',
-    
+
     // Landing
     'landing.hero.title': 'Professional Car Detailing Services',
     'landing.hero.subtitle': 'Premium care for your vehicle with convenient online booking',
@@ -37,7 +37,7 @@ const translations = {
     'landing.contact.phone': 'Phone',
     'landing.contact.email': 'Email',
     'landing.contact.address': 'Address',
-    
+
     // Auth
     'auth.email': 'Email',
     'auth.password': 'Password',
@@ -47,7 +47,7 @@ const translations = {
     'auth.login.title': 'Login to Your Account',
     'auth.register.title': 'Create an Account',
     'auth.continueAsGuest': 'Continue as Guest',
-    
+
     // Services
     'service.fullWash': 'Full Wash',
     'service.exteriorWash': 'Exterior Wash',
@@ -55,12 +55,12 @@ const translations = {
     'service.fullWash.desc': 'Interior + Exterior',
     'service.exteriorWash.desc': 'Pre-soak, tar removal, hand wash with shampoo, wheel wash, hand drying, door jamb cleaning, tire shine',
     'service.interiorCleaning.desc': 'Floor mat cleaning, window cleaning, surface cleaning, air vent cleaning, vacuuming of the cabin and trunk',
-    
+
     // Vehicle types
     'vehicle.motorcycle': 'Motorcycle',
     'vehicle.car': 'Car',
     'vehicle.van': 'Van',
-    
+
     // Add-ons
     'addon.rustRemoval': 'Rust spot removal',
     'addon.quickCeramic': 'Quick ceramic coating',
@@ -72,12 +72,11 @@ const translations = {
     'addon.ozoneOdor': 'Odor removal with ozone',
     'addon.leatherCeramic': 'Leather ceramic coating',
     'addon.extraDirty': 'Extra dirty vehicle surcharge',
-    
+
     // Delivery
     'delivery.pickup': 'We pick up the car',
-    'delivery.airport': 'Airport drop-off',
     'delivery.myself': 'I bring it myself',
-    
+
     // Booking
     'booking.title': 'New Booking',
     'booking.step.vehicle': 'Vehicle Type',
@@ -93,13 +92,13 @@ const translations = {
     'booking.status.inProgress': 'In Progress',
     'booking.status.completed': 'Completed',
     'booking.status.cancelled': 'Cancelled',
-    
+
     // Client Dashboard
     'client.dashboard': 'Dashboard',
     'client.profile': 'Profile',
     'client.bookings': 'My Bookings',
     'client.newBooking': 'New Booking',
-    
+
     // Admin
     'admin.dashboard': 'Admin Dashboard',
     'admin.services': 'Services',
@@ -132,7 +131,7 @@ const translations = {
     'common.filter': 'Filtreeri',
     'common.status': 'Staatus',
     'common.actions': 'Tegevused',
-    
+
     // Landing
     'landing.hero.title': 'Professionaalne Autopesula Teenus',
     'landing.hero.subtitle': 'Kvaliteetne hooldus teie sõidukile mugava veebibroneerimisel',
@@ -142,7 +141,7 @@ const translations = {
     'landing.contact.phone': 'Telefon',
     'landing.contact.email': 'E-post',
     'landing.contact.address': 'Aadress',
-    
+
     // Auth
     'auth.email': 'E-post',
     'auth.password': 'Salasõna',
@@ -152,7 +151,7 @@ const translations = {
     'auth.login.title': 'Logi sisse oma kontole',
     'auth.register.title': 'Loo konto',
     'auth.continueAsGuest': 'Jätka külalisena',
-    
+
     // Services
     'service.fullWash': 'Täispesu',
     'service.exteriorWash': 'Välispesu',
@@ -160,12 +159,12 @@ const translations = {
     'service.fullWash.desc': 'Sise + Välis',
     'service.exteriorWash.desc': 'Eelleotus, tõrva eemaldamine, käsipesu šampooniga, rataste pesu, käsikuivatamine, uste piirde puhastamine, rehvide läige',
     'service.interiorCleaning.desc': 'Põrandamatide puhastamine, akende puhastamine, pindade puhastamine, õhuavade puhastamine, saloongi ja pagasiruumi tolmuimeja',
-    
+
     // Vehicle types
     'vehicle.motorcycle': 'Mootorratas',
     'vehicle.car': 'Auto',
     'vehicle.van': 'Kaubik',
-    
+
     // Add-ons
     'addon.rustRemoval': 'Roostetäppide eemaldamine',
     'addon.quickCeramic': 'Kiire keraamiline kate',
@@ -177,12 +176,11 @@ const translations = {
     'addon.ozoneOdor': 'Lõhna eemaldamine osooniga',
     'addon.leatherCeramic': 'Naha keraamiline kate',
     'addon.extraDirty': 'Eriti määrdunud sõiduki lisatasu',
-    
+
     // Delivery
     'delivery.pickup': 'Me võtame auto vastu',
-    'delivery.airport': 'Lennujaama toomine',
     'delivery.myself': 'Toon ise',
-    
+
     // Booking
     'booking.title': 'Uus Broneering',
     'booking.step.vehicle': 'Sõiduki tüüp',
@@ -198,13 +196,13 @@ const translations = {
     'booking.status.inProgress': 'Töös',
     'booking.status.completed': 'Lõpetatud',
     'booking.status.cancelled': 'Tühistatud',
-    
+
     // Client Dashboard
     'client.dashboard': 'Töölaud',
     'client.profile': 'Profiil',
     'client.bookings': 'Minu broneeringud',
     'client.newBooking': 'Uus broneering',
-    
+
     // Admin
     'admin.dashboard': 'Admini Töölaud',
     'admin.services': 'Teenused',
@@ -237,7 +235,7 @@ const translations = {
     'common.filter': 'Фильтр',
     'common.status': 'Статус',
     'common.actions': 'Действия',
-    
+
     // Landing
     'landing.hero.title': 'Профессиональная детейлинг услуга',
     'landing.hero.subtitle': 'Качественный уход за вашим автомобилем с удобным онлайн-бронированием',
@@ -247,7 +245,7 @@ const translations = {
     'landing.contact.phone': 'Телефон',
     'landing.contact.email': 'Email',
     'landing.contact.address': 'Адрес',
-    
+
     // Auth
     'auth.email': 'Email',
     'auth.password': 'Пароль',
@@ -257,7 +255,7 @@ const translations = {
     'auth.login.title': 'Войти в аккаунт',
     'auth.register.title': 'Создать аккаунт',
     'auth.continueAsGuest': 'Продолжить как гость',
-    
+
     // Services
     'service.fullWash': 'Полная мойка',
     'service.exteriorWash': 'Внешняя мойка',
@@ -265,12 +263,12 @@ const translations = {
     'service.fullWash.desc': 'Салон + Кузов',
     'service.exteriorWash.desc': 'Предварительное замачивание, удаление битума, ручная мойка шампунем, мойка колес, ручная сушка, чистка дверных проемов, блеск шин',
     'service.interiorCleaning.desc': 'Чистка ковриков, мойка окон, чистка поверхностей, чистка вентиляционных отверстий, пылесос салона и багажника',
-    
+
     // Vehicle types
     'vehicle.motorcycle': 'Мотоцикл',
     'vehicle.car': 'Автомобиль',
     'vehicle.van': 'Фургон',
-    
+
     // Add-ons
     'addon.rustRemoval': 'Удаление пятен ржавчины',
     'addon.quickCeramic': 'Быстрое керамическое покрытие',
@@ -282,12 +280,11 @@ const translations = {
     'addon.ozoneOdor': 'Удаление запаха озоном',
     'addon.leatherCeramic': 'Керамическое покрытие кожи',
     'addon.extraDirty': 'Доплата за сильно загрязненный автомобиль',
-    
+
     // Delivery
     'delivery.pickup': 'Мы заберем машину',
-    'delivery.airport': 'Доставка в аэропорт',
     'delivery.myself': 'Привезу сам',
-    
+
     // Booking
     'booking.title': 'Новое бронирование',
     'booking.step.vehicle': 'Тип транспорта',
@@ -303,13 +300,13 @@ const translations = {
     'booking.status.inProgress': 'В работе',
     'booking.status.completed': 'Завершено',
     'booking.status.cancelled': 'Отменено',
-    
+
     // Client Dashboard
     'client.dashboard': 'Панель',
     'client.profile': 'Профиль',
     'client.bookings': 'Мои бронирования',
     'client.newBooking': 'Новое бронирование',
-    
+
     // Admin
     'admin.dashboard': 'Админ панель',
     'admin.services': 'Услуги',
