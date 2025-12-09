@@ -25,14 +25,14 @@ export function TimeSlotStep({ selected, onSelect }: TimeSlotStepProps) {
     <div>
       <h3 className="mb-6">{t('booking.step.time')}</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
+        <div className="flex flex-col items-center md:items-start">
           <h4 className="mb-4">Select Date</h4>
           <Calendar
-            mode="single"
-            selected={selectedDate}
-            onSelect={setSelectedDate}
-            disabled={(date) => date < new Date()}
-            className="rounded-md border"
+              mode="single"
+              selected={selectedDate}
+              onSelect={setSelectedDate}
+              disabled={(date) => date < new Date()}
+              className="rounded-md border max-w-sm"
           />
         </div>
         <div>
