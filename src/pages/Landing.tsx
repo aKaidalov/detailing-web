@@ -1,17 +1,26 @@
+import { useState } from 'react';
 import { Button } from '../components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { useNavigate } from 'react-router-dom';
-import { Car, Sparkles, CheckCircle, Phone, Mail, MapPin } from 'lucide-react';
-import { services } from '../data/mockData';
-
-const vehicleLabels = {
-  motorcycle: 'Motorcycle',
-  car: 'Car',
-  van: 'Van',
-};
+import { Car, Sparkles, CheckCircle, Phone, Mail, MapPin, ChevronDown, ChevronUp } from 'lucide-react';
+import { useVehicleTypes, usePackages } from '../api/hooks';
 
 export function Landing() {
   const navigate = useNavigate();
+  const [expandedPackageId, setExpandedPackageId] = useState<number | null>(null);
+
+  // Fetch vehicle types and packages from API
+  const { data: vehicleTypes, isLoading: vehicleTypesLoading } = useVehicleTypes();
+  const firstVehicleTypeId = vehicleTypes?.[0]?.id ?? null;
+  const { data: packages, isLoading: packagesLoading } = usePackages(firstVehicleTypeId);
+
+  // Calculate minimum base price across all vehicle types
+  const minBasePrice = vehicleTypes?.reduce(
+    (min, vt) => Math.min(min, vt.basePrice),
+    Infinity
+  ) ?? 0;
+
+  const isLoading = vehicleTypesLoading || packagesLoading;
 
   return (
     <div className="min-h-screen">
@@ -40,37 +49,53 @@ export function Landing() {
       <section className="py-20 px-4 bg-muted/30">
         <div className="container mx-auto">
           <h2 className="text-center mb-12">Our Services</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {services.map((service) => (
-              <Card key={service.id}>
-                <CardHeader>
-                  <CardTitle>{service.name}</CardTitle>
-                  <CardDescription>{service.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    {service.prices.motorcycle && (
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">{vehicleLabels.motorcycle}</span>
-                        <span>€{service.prices.motorcycle}</span>
-                      </div>
-                    )}
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">{vehicleLabels.car}</span>
-                      <span>€{service.prices.car}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">{vehicleLabels.van}</span>
-                      <span>€{service.prices.van}</span>
-                    </div>
-                  </div>
-                  <Button className="w-full mt-4" onClick={() => navigate('/booking')}>
-                    Book Now
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          {isLoading ? (
+            <p className="text-center text-muted-foreground">Loading services...</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {packages?.map((pkg) => {
+                const isExpanded = expandedPackageId === pkg.id;
+                const toggleExpand = () => setExpandedPackageId(isExpanded ? null : pkg.id);
+
+                return (
+                  <Card key={pkg.id}>
+                    <CardHeader>
+                      <CardTitle>{pkg.name}</CardTitle>
+                      {pkg.description && (
+                        <div>
+                          <button
+                            type="button"
+                            onClick={toggleExpand}
+                            className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer border-none bg-transparent p-0 focus:outline-none"
+                          >
+                            <span>Description</span>
+                            {isExpanded ? (
+                              <ChevronUp className="w-4 h-4" />
+                            ) : (
+                              <ChevronDown className="w-4 h-4" />
+                            )}
+                          </button>
+                          {isExpanded && (
+                            <p className="mt-2 text-sm text-muted-foreground">
+                              {pkg.description}
+                            </p>
+                          )}
+                        </div>
+                      )}
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-2xl font-semibold mb-4">
+                        From €{minBasePrice + pkg.price}
+                      </p>
+                      <Button className="w-full" onClick={() => navigate('/booking')}>
+                        Book Now
+                      </Button>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 
