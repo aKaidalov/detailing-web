@@ -51,13 +51,10 @@ export function DeliveryStep({ vehicleTypeId, selectedId, address, onSelect }: D
   }
 
   // Filter options based on vehicle deliverability
-  const availableOptions = deliveryTypes?.filter((option) => {
-    // If vehicle is not deliverable, only show non-pickup options
-    if (!isDeliverable && option.requiresAddress) {
-      return false;
-    }
-    return true;
-  }) || [];
+  // If vehicle is not deliverable, only show non-pickup options
+  const availableOptions = deliveryTypes?.filter((option) =>
+    isDeliverable || !option.requiresAddress
+  ) || [];
 
   return (
     <div>

@@ -24,16 +24,19 @@ import { AdminStatistics } from './pages/admin/AdminStatistics';
 import { AdminSettings } from './pages/admin/AdminSettings';
 import { Toaster } from './components/ui/sonner';
 
-function ProtectedRoute({ children, adminOnly: _adminOnly = false }: { children: React.ReactNode; adminOnly?: boolean }) {
+function ProtectedRoute({ children, adminOnly = false }: { children: React.ReactNode; adminOnly?: boolean }) {
   // const { user } = useAuth(); //TODO: return back when implement auth!
   //
   // if (!user) {
   //   return <Navigate to="/login" />;
   // }
   //
-  // if (_adminOnly && user.role !== 'admin') {
+  // if (adminOnly && user.role !== 'admin') {
   //   return <Navigate to="/dashboard" />;
   // }
+
+  // Suppress unused variable warning until auth is implemented
+  void adminOnly;
 
   return <>{children}</>;
 }
