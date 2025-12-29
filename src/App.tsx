@@ -9,6 +9,7 @@ import { Landing } from './pages/Landing';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { Booking } from './pages/Booking';
+import { BookingSuccess } from './pages/BookingSuccess';
 import { ClientDashboard } from './pages/ClientDashboard';
 import { BookingDetail } from './pages/BookingDetail';
 import { AdminLayout } from './components/AdminLayout';
@@ -44,6 +45,7 @@ function AppRoutes() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/booking" element={<Booking />} />
+      <Route path="/booking/success" element={<BookingSuccess />} />
 
       {/* Client routes */}
       <Route

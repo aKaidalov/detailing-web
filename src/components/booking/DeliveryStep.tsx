@@ -1,41 +1,77 @@
 import { Card, CardContent } from '../ui/card';
-import type { DeliveryOption, VehicleType } from '../../types/booking';
-import { deliveryOptions } from '../../data/mockData';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
 import { CheckCircle, Car, User } from 'lucide-react';
+import { useDeliveryTypes, useVehicleTypes } from '../../api/hooks';
 
 interface DeliveryStepProps {
-  vehicleType: VehicleType;
-  selected: DeliveryOption;
-  onSelect: (delivery: DeliveryOption) => void;
+  vehicleTypeId: number | null;
+  selectedId: number | null;
+  address: string;
+  onSelect: (id: number, address?: string) => void;
 }
 
-export function DeliveryStep({ vehicleType, selected, onSelect }: DeliveryStepProps) {
-  const availableOptions = deliveryOptions.filter((option) =>
-    option.applicableVehicles.includes(vehicleType)
-  );
+export function DeliveryStep({ vehicleTypeId, selectedId, address, onSelect }: DeliveryStepProps) {
+  const { data: deliveryTypes, isLoading, error } = useDeliveryTypes();
+  const { data: vehicleTypes } = useVehicleTypes();
 
-  const getIcon = (id: DeliveryOption) => {
-    switch (id) {
-      case 'pickup':
-        return Car;
-      case 'myself':
-        return User;
+  // Find the selected vehicle type to check if deliverable
+  const selectedVehicle = vehicleTypes?.find((v) => v.id === vehicleTypeId);
+  const isDeliverable = selectedVehicle?.isDeliverable ?? true;
+
+  // Find selected delivery type to check if address is required
+  const selectedDelivery = deliveryTypes?.find((d) => d.id === selectedId);
+  const requiresAddress = selectedDelivery?.requiresAddress ?? false;
+
+  // Map icons based on common delivery type patterns
+  const getIcon = (name: string) => {
+    const lowerName = name.toLowerCase();
+    if (lowerName.includes('pick') || lowerName.includes('delivery')) {
+      return Car;
     }
+    return User;
   };
+
+  if (isLoading) {
+    return (
+      <div>
+        <h3 className="mb-6">Delivery Option</h3>
+        <p className="text-muted-foreground">Loading delivery options...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div>
+        <h3 className="mb-6">Delivery Option</h3>
+        <p className="text-destructive">Failed to load delivery options. Please try again.</p>
+      </div>
+    );
+  }
+
+  // Filter options based on vehicle deliverability
+  const availableOptions = deliveryTypes?.filter((option) => {
+    // If vehicle is not deliverable, only show non-pickup options
+    if (!isDeliverable && option.requiresAddress) {
+      return false;
+    }
+    return true;
+  }) || [];
 
   return (
     <div>
       <h3 className="mb-6">Delivery Option</h3>
       <div className="grid grid-cols-1 gap-4">
         {availableOptions.map((option) => {
-          const Icon = getIcon(option.id);
+          const Icon = getIcon(option.name);
           return (
             <Card
               key={option.id}
               className={`cursor-pointer transition-all hover:shadow-md ${
-                selected === option.id ? 'ring-2 ring-primary bg-primary/5' : ''
+                selectedId === option.id ? 'ring-2 ring-primary bg-primary/5' : ''
               }`}
-              onClick={() => onSelect(option.id)}
+              onClick={() => onSelect(option.id, address)}
             >
               <CardContent className="py-4">
                 <div className="flex items-center justify-between">
@@ -47,7 +83,7 @@ export function DeliveryStep({ vehicleType, selected, onSelect }: DeliveryStepPr
                     <span className="font-semibold">
                       {option.price > 0 ? `+€${option.price}` : 'Free'}
                     </span>
-                    {selected === option.id && (
+                    {selectedId === option.id && (
                       <CheckCircle className="w-6 h-6 text-primary" />
                     )}
                   </div>
@@ -57,6 +93,21 @@ export function DeliveryStep({ vehicleType, selected, onSelect }: DeliveryStepPr
           );
         })}
       </div>
+
+      {/* Address input when required */}
+      {requiresAddress && (
+        <div className="mt-6 space-y-2">
+          <Label htmlFor="address">Pickup Address</Label>
+          <Input
+            id="address"
+            type="text"
+            value={address}
+            onChange={(e) => onSelect(selectedId!, e.target.value)}
+            placeholder="Enter your address for pickup"
+            required
+          />
+        </div>
+      )}
     </div>
   );
 }

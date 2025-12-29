@@ -65,7 +65,7 @@ export type BookingStatus =
   | 'CANCELLED_BY_ADMIN'
   | 'COMPLETED';
 
-// Create Booking Request
+// Create Booking Request (matches backend BookingCreateRequest)
 export interface CreateBookingRequest {
   vehicleTypeId: number;
   packageId: number;
@@ -75,10 +75,10 @@ export interface CreateBookingRequest {
   address?: string;
   firstName: string;
   lastName: string;
-  phoneNumber: string;
+  phone: string;
   email: string;
-  vehicleRegistrationNumber: string;
-  additionalComments?: string;
+  vehicleRegNumber: string;
+  notes?: string;
 }
 
 // Booking Response

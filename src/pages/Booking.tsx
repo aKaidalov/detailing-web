@@ -1,51 +1,66 @@
 import { useState } from 'react';
-import { useAuth } from '../contexts/AuthContext';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Progress } from '../components/ui/progress';
 import { VehicleStep } from '../components/booking/VehicleStep';
-import { ServiceStep } from '../components/booking/ServiceStep';
+import { PackageStep } from '../components/booking/PackageStep';
 import { AddOnsStep } from '../components/booking/AddOnsStep';
-import { DeliveryStep } from '../components/booking/DeliveryStep';
 import { TimeSlotStep } from '../components/booking/TimeSlotStep';
-import { ClientDetailsStep } from '../components/booking/ClientDetailsStep';
+import { DeliveryStep } from '../components/booking/DeliveryStep';
 import { ConfirmationStep } from '../components/booking/ConfirmationStep';
-import { VehicleType, ServiceType, DeliveryOption } from '../types/booking';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
+// Booking state with numeric IDs for API
+export interface BookingData {
+  vehicleTypeId: number | null;
+  packageId: number | null;
+  addOnIds: number[];
+  timeSlotId: number | null;
+  deliveryTypeId: number | null;
+  address: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  vehicleRegNumber: string;
+  notes: string;
+}
+
 export function Booking() {
-  const { user } = useAuth();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
-  const [bookingData, setBookingData] = useState({
-    vehicleType: '' as VehicleType,
-    service: '' as ServiceType,
-    addOns: [] as string[],
-    delivery: '' as DeliveryOption,
-    timeSlot: '',
-    clientName: user?.name || '',
-    clientEmail: user?.email || '',
-    clientPhone: user?.phone || '',
+  const [bookingData, setBookingData] = useState<BookingData>({
+    vehicleTypeId: null,
+    packageId: null,
+    addOnIds: [],
+    timeSlotId: null,
+    deliveryTypeId: null,
+    address: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    vehicleRegNumber: '',
+    notes: '',
   });
 
-  const totalSteps = 7;
+  // Step order: Vehicle → Package → AddOns → TimeSlot → Delivery → Confirmation
+  const totalSteps = 6;
   const progress = (step / totalSteps) * 100;
 
   const canProceed = () => {
     switch (step) {
       case 1:
-        return bookingData.vehicleType !== '';
+        return bookingData.vehicleTypeId !== null;
       case 2:
-        return bookingData.service !== '';
+        return bookingData.packageId !== null;
       case 3:
         return true; // Add-ons are optional
       case 4:
-        return bookingData.delivery !== '';
+        return bookingData.timeSlotId !== null;
       case 5:
-        return bookingData.timeSlot !== '';
-      case 6:
-        return bookingData.clientName && bookingData.clientEmail && bookingData.clientPhone;
+        return bookingData.deliveryTypeId !== null;
       default:
         return true;
     }
@@ -65,15 +80,22 @@ export function Booking() {
     }
   };
 
-  const handleSubmit = () => {
-    // In a real app, this would send the booking to the backend
-    console.log('Booking submitted:', bookingData);
-    navigate('/dashboard');
+  const updateBookingData = (updates: Partial<BookingData>) => {
+    setBookingData((prev) => {
+      const newData = { ...prev, ...updates };
+      // Reset dependent selections when parent changes
+      if ('vehicleTypeId' in updates && updates.vehicleTypeId !== prev.vehicleTypeId) {
+        newData.packageId = null;
+        newData.addOnIds = [];
+      }
+      if ('packageId' in updates && updates.packageId !== prev.packageId) {
+        newData.addOnIds = [];
+      }
+      return newData;
+    });
   };
 
-  const updateBookingData = (updates: Partial<typeof bookingData>) => {
-    setBookingData({ ...bookingData, ...updates });
-  };
+  const stepLabels = ['Vehicle', 'Package', 'Add-ons', 'Time', 'Delivery', 'Confirm'];
 
   return (
     <div className="min-h-[calc(100vh-80px)] py-8 px-4">
@@ -81,53 +103,48 @@ export function Booking() {
         <Card>
           <CardHeader>
             <CardTitle>New Booking</CardTitle>
-            <CardDescription>Step {step} of {totalSteps}</CardDescription>
+            <CardDescription>Step {step} of {totalSteps}: {stepLabels[step - 1]}</CardDescription>
             <Progress value={progress} className="mt-4" />
           </CardHeader>
           <CardContent className="min-h-[400px]">
             {step === 1 && (
               <VehicleStep
-                selected={bookingData.vehicleType}
-                onSelect={(type) => updateBookingData({ vehicleType: type })}
+                selectedId={bookingData.vehicleTypeId}
+                onSelect={(id) => updateBookingData({ vehicleTypeId: id })}
               />
             )}
             {step === 2 && (
-              <ServiceStep
-                vehicleType={bookingData.vehicleType}
-                selected={bookingData.service}
-                onSelect={(service) => updateBookingData({ service })}
+              <PackageStep
+                vehicleTypeId={bookingData.vehicleTypeId}
+                selectedId={bookingData.packageId}
+                onSelect={(id) => updateBookingData({ packageId: id })}
               />
             )}
             {step === 3 && (
               <AddOnsStep
-                service={bookingData.service}
-                selected={bookingData.addOns}
-                onSelect={(addOns) => updateBookingData({ addOns })}
+                packageId={bookingData.packageId}
+                selectedIds={bookingData.addOnIds}
+                onSelect={(ids) => updateBookingData({ addOnIds: ids })}
               />
             )}
             {step === 4 && (
-              <DeliveryStep
-                vehicleType={bookingData.vehicleType}
-                selected={bookingData.delivery}
-                onSelect={(delivery) => updateBookingData({ delivery })}
+              <TimeSlotStep
+                selectedId={bookingData.timeSlotId}
+                onSelect={(id) => updateBookingData({ timeSlotId: id })}
               />
             )}
             {step === 5 && (
-              <TimeSlotStep
-                selected={bookingData.timeSlot}
-                onSelect={(timeSlot) => updateBookingData({ timeSlot })}
+              <DeliveryStep
+                vehicleTypeId={bookingData.vehicleTypeId}
+                selectedId={bookingData.deliveryTypeId}
+                address={bookingData.address}
+                onSelect={(id, address) => updateBookingData({ deliveryTypeId: id, address: address || '' })}
               />
             )}
             {step === 6 && (
-              <ClientDetailsStep
-                data={bookingData}
-                onChange={updateBookingData}
-              />
-            )}
-            {step === 7 && (
               <ConfirmationStep
                 bookingData={bookingData}
-                onSubmit={handleSubmit}
+                onUpdate={updateBookingData}
               />
             )}
           </CardContent>
@@ -136,14 +153,10 @@ export function Booking() {
               <ChevronLeft className="w-4 h-4 mr-2" />
               Back
             </Button>
-            {step < totalSteps ? (
+            {step < totalSteps && (
               <Button onClick={handleNext} disabled={!canProceed()}>
                 Next
                 <ChevronRight className="w-4 h-4 ml-2" />
-              </Button>
-            ) : (
-              <Button onClick={handleSubmit}>
-                Submit
               </Button>
             )}
           </div>
