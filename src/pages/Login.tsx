@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -9,7 +8,6 @@ import { useNavigate } from 'react-router-dom';
 import { Separator } from '../components/ui/separator';
 
 export function Login() {
-  const { t } = useLanguage();
   const { login, continueAsGuest } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
@@ -30,7 +28,7 @@ export function Login() {
     <div className="min-h-[calc(100vh-80px)] flex items-center justify-center px-4 py-12">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>{t('auth.login.title')}</CardTitle>
+          <CardTitle>Login to Your Account</CardTitle>
           <CardDescription>
             Enter your credentials to access your account
           </CardDescription>
@@ -38,7 +36,7 @@ export function Login() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">{t('auth.email')}</Label>
+              <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -49,7 +47,7 @@ export function Login() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">{t('auth.password')}</Label>
+              <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
                 type="password"
@@ -60,7 +58,7 @@ export function Login() {
               />
             </div>
             <Button type="submit" className="w-full">
-              {t('common.login')}
+              Login
             </Button>
           </form>
 
@@ -79,14 +77,14 @@ export function Login() {
               className="w-full"
               onClick={handleGuestContinue}
             >
-              {t('auth.continueAsGuest')}
+              Continue as Guest
             </Button>
             <Button
               variant="ghost"
               className="w-full"
               onClick={() => navigate('/register')}
             >
-              {t('common.register')}
+              Register
             </Button>
           </div>
         </CardContent>

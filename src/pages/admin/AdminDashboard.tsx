@@ -1,4 +1,3 @@
-import { useLanguage } from '../../contexts/LanguageContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
 import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
@@ -10,38 +9,36 @@ import {
   TableHeader,
   TableRow,
 } from '../../components/ui/table';
-import { mockBookings } from '../../data/mockData';
+import { mockBookings, services } from '../../data/mockData';
 import { TrendingUp, Calendar, Users, DollarSign, Eye } from 'lucide-react';
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from '../../components/ui/chart';
+import { ChartTooltip } from '../../components/ui/chart';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, LineChart, Line } from 'recharts';
 
 export function AdminDashboard() {
-  const { t } = useLanguage();
-
   const kpis = [
     {
-      title: t('admin.kpi.totalBookings'),
+      title: 'Total Bookings',
       value: '156',
       change: '+12%',
       icon: Calendar,
       trend: 'up',
     },
     {
-      title: t('admin.kpi.revenue'),
+      title: 'Revenue',
       value: '€8,420',
       change: '+23%',
       icon: DollarSign,
       trend: 'up',
     },
     {
-      title: t('admin.kpi.pendingApprovals'),
+      title: 'Pending Approvals',
       value: '8',
       change: '-5%',
       icon: TrendingUp,
       trend: 'down',
     },
     {
-      title: t('admin.kpi.activeClients'),
+      title: 'Active Clients',
       value: '89',
       change: '+8%',
       icon: Users,
@@ -70,10 +67,15 @@ export function AdminDashboard() {
 
   const pendingBookings = mockBookings.filter((b) => b.status === 'pending');
 
+  const getServiceName = (serviceId: string) => {
+    const service = services.find(s => s.id === serviceId);
+    return service?.name || serviceId;
+  };
+
   return (
     <div className="space-y-6">
       <div>
-        <h2>{t('admin.dashboard')}</h2>
+        <h2>Admin Dashboard</h2>
         <p className="text-muted-foreground mt-1">
           Overview of your business performance
         </p>
@@ -175,7 +177,7 @@ export function AdminDashboard() {
                 <TableRow key={booking.id}>
                   <TableCell>#{booking.id}</TableCell>
                   <TableCell>{booking.clientName}</TableCell>
-                  <TableCell>{t(`service.${booking.service}`)}</TableCell>
+                  <TableCell>{getServiceName(booking.service)}</TableCell>
                   <TableCell>
                     {new Date(booking.timeSlot).toLocaleString()}
                   </TableCell>

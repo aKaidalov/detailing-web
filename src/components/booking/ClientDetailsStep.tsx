@@ -1,4 +1,3 @@
-import { useLanguage } from '../../contexts/LanguageContext';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 
@@ -12,14 +11,12 @@ interface ClientDetailsStepProps {
 }
 
 export function ClientDetailsStep({ data, onChange }: ClientDetailsStepProps) {
-  const { t } = useLanguage();
-
   return (
     <div>
-      <h3 className="mb-6">{t('booking.step.details')}</h3>
+      <h3 className="mb-6">Your Details</h3>
       <div className="space-y-4 max-w-md">
         <div className="space-y-2">
-          <Label htmlFor="clientName">{t('auth.name')}</Label>
+          <Label htmlFor="clientName">Full Name</Label>
           <Input
             id="clientName"
             type="text"
@@ -30,7 +27,7 @@ export function ClientDetailsStep({ data, onChange }: ClientDetailsStepProps) {
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="clientEmail">{t('auth.email')}</Label>
+          <Label htmlFor="clientEmail">Email</Label>
           <Input
             id="clientEmail"
             type="email"
@@ -41,7 +38,7 @@ export function ClientDetailsStep({ data, onChange }: ClientDetailsStepProps) {
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="clientPhone">{t('auth.phone')}</Label>
+          <Label htmlFor="clientPhone">Phone Number</Label>
           <Input
             id="clientPhone"
             type="tel"

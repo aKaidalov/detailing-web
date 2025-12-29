@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useLanguage } from '../../contexts/LanguageContext';
 import { Card, CardContent } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
@@ -19,11 +18,18 @@ import {
   TableHeader,
   TableRow,
 } from '../../components/ui/table';
-import { mockBookings } from '../../data/mockData';
+import { mockBookings, services } from '../../data/mockData';
 import { Search, Eye, CheckCircle, XCircle } from 'lucide-react';
 
+const statusLabels: Record<string, string> = {
+  pending: 'Pending',
+  confirmed: 'Confirmed',
+  inProgress: 'In Progress',
+  completed: 'Completed',
+  cancelled: 'Cancelled',
+};
+
 export function AdminBookings() {
-  const { t } = useLanguage();
   const [statusFilter, setStatusFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -44,6 +50,11 @@ export function AdminBookings() {
     }
   };
 
+  const getServiceName = (serviceId: string) => {
+    const service = services.find(s => s.id === serviceId);
+    return service?.name || serviceId;
+  };
+
   const filteredBookings = mockBookings.filter((booking) => {
     const matchesStatus = statusFilter === 'all' || booking.status === statusFilter;
     const matchesSearch =
@@ -56,7 +67,7 @@ export function AdminBookings() {
   return (
     <div className="space-y-6">
       <div>
-        <h2>{t('admin.bookings')}</h2>
+        <h2>Bookings</h2>
         <p className="text-muted-foreground mt-1">
           View and manage all customer bookings
         </p>
@@ -113,13 +124,13 @@ export function AdminBookings() {
                       <p className="text-muted-foreground">{booking.clientPhone}</p>
                     </div>
                   </TableCell>
-                  <TableCell>{t(`service.${booking.service}`)}</TableCell>
+                  <TableCell>{getServiceName(booking.service)}</TableCell>
                   <TableCell>
                     {new Date(booking.timeSlot).toLocaleString()}
                   </TableCell>
                   <TableCell>
                     <Badge className={getStatusColor(booking.status)}>
-                      {t(`booking.status.${booking.status}`)}
+                      {statusLabels[booking.status]}
                     </Badge>
                   </TableCell>
                   <TableCell>€{booking.totalPrice}</TableCell>

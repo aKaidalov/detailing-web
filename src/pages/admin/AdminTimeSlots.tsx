@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useLanguage } from '../../contexts/LanguageContext';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
@@ -26,7 +25,6 @@ import { Plus, Edit, Trash, Clock } from 'lucide-react';
 import { Badge } from '../../components/ui/badge';
 
 export function AdminTimeSlots() {
-  const { t } = useLanguage();
   const [open, setOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const timeSlots = generateTimeSlots();
@@ -41,7 +39,7 @@ export function AdminTimeSlots() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2>{t('admin.timeslots')}</h2>
+          <h2>Time Slots</h2>
           <p className="text-muted-foreground mt-1">
             Manage available time slots and schedules
           </p>
@@ -111,10 +109,10 @@ export function AdminTimeSlots() {
               </div>
               <div className="flex justify-end gap-2">
                 <Button variant="outline" onClick={() => setOpen(false)}>
-                  {t('common.cancel')}
+                  Cancel
                 </Button>
                 <Button onClick={() => setOpen(false)}>
-                  {t('common.save')}
+                  Save
                 </Button>
               </div>
             </form>

@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
@@ -16,8 +15,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export function Booking() {
-  const { t } = useLanguage();
-  const { user, isGuest } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [bookingData, setBookingData] = useState({
@@ -82,7 +80,7 @@ export function Booking() {
       <div className="container mx-auto max-w-4xl">
         <Card>
           <CardHeader>
-            <CardTitle>{t('booking.title')}</CardTitle>
+            <CardTitle>New Booking</CardTitle>
             <CardDescription>Step {step} of {totalSteps}</CardDescription>
             <Progress value={progress} className="mt-4" />
           </CardHeader>
@@ -136,16 +134,16 @@ export function Booking() {
           <div className="border-t p-6 flex justify-between">
             <Button variant="outline" onClick={handleBack}>
               <ChevronLeft className="w-4 h-4 mr-2" />
-              {t('common.back')}
+              Back
             </Button>
             {step < totalSteps ? (
               <Button onClick={handleNext} disabled={!canProceed()}>
-                {t('common.next')}
+                Next
                 <ChevronRight className="w-4 h-4 ml-2" />
               </Button>
             ) : (
               <Button onClick={handleSubmit}>
-                {t('common.submit')}
+                Submit
               </Button>
             )}
           </div>

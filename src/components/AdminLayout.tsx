@@ -1,6 +1,4 @@
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { useLanguage } from '../contexts/LanguageContext';
-import { Button } from './ui/button';
 import { SidebarProvider, Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from './ui/sidebar';
 import {
   LayoutDashboard,
@@ -14,48 +12,47 @@ import {
 } from 'lucide-react';
 
 export function AdminLayout() {
-  const { t } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
 
   const menuItems = [
     {
-      title: t('admin.dashboard'),
+      title: 'Admin Dashboard',
       icon: LayoutDashboard,
       path: '/admin',
     },
     {
-      title: t('admin.services'),
+      title: 'Services',
       icon: Wrench,
       path: '/admin/services',
     },
     {
-      title: t('admin.bookings'),
+      title: 'Bookings',
       icon: Calendar,
       path: '/admin/bookings',
     },
     {
-      title: t('admin.timeslots'),
+      title: 'Time Slots',
       icon: Clock,
       path: '/admin/timeslots',
     },
     {
-      title: t('admin.users'),
+      title: 'Users',
       icon: Users,
       path: '/admin/users',
     },
     {
-      title: t('admin.notifications'),
+      title: 'Notifications',
       icon: Bell,
       path: '/admin/notifications',
     },
     {
-      title: t('admin.statistics'),
+      title: 'Statistics',
       icon: BarChart3,
       path: '/admin/statistics',
     },
     {
-      title: t('admin.settings'),
+      title: 'Settings',
       icon: Settings,
       path: '/admin/settings',
     },

@@ -1,7 +1,6 @@
-import { useLanguage } from '../../contexts/LanguageContext';
 import { Card, CardContent } from '../ui/card';
 import { Checkbox } from '../ui/checkbox';
-import { ServiceType } from '../../types/booking';
+import type { ServiceType } from '../../types/booking';
 import { addOns } from '../../data/mockData';
 
 interface AddOnsStepProps {
@@ -11,8 +10,6 @@ interface AddOnsStepProps {
 }
 
 export function AddOnsStep({ service, selected, onSelect }: AddOnsStepProps) {
-  const { t } = useLanguage();
-
   const availableAddOns = addOns.filter((addon) =>
     addon.applicableServices.includes(service)
   );
@@ -27,7 +24,7 @@ export function AddOnsStep({ service, selected, onSelect }: AddOnsStepProps) {
 
   return (
     <div>
-      <h3 className="mb-2">{t('booking.step.addons')}</h3>
+      <h3 className="mb-2">Add-ons</h3>
       <p className="text-muted-foreground mb-6">Optional - select any add-ons you want</p>
       <div className="grid grid-cols-1 gap-3">
         {availableAddOns.map((addon) => (
@@ -46,7 +43,7 @@ export function AddOnsStep({ service, selected, onSelect }: AddOnsStepProps) {
                     onCheckedChange={() => toggleAddOn(addon.id)}
                   />
                   <div>
-                    <p>{t(`addon.${addon.id}`)}</p>
+                    <p>{addon.name}</p>
                   </div>
                 </div>
                 <span className="font-semibold">+€{addon.price}</span>

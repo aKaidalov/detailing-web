@@ -1,5 +1,6 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { LanguageProvider } from './contexts/LanguageContext';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { queryClient } from './api/queryClient';
 import { AuthProvider,
     // useAuth //TODO: return back when implement auth!
 } from './contexts/AuthContext';
@@ -21,14 +22,14 @@ import { AdminStatistics } from './pages/admin/AdminStatistics';
 import { AdminSettings } from './pages/admin/AdminSettings';
 import { Toaster } from './components/ui/sonner';
 
-function ProtectedRoute({ children, adminOnly = false }: { children: React.ReactNode; adminOnly?: boolean }) {
+function ProtectedRoute({ children, adminOnly: _adminOnly = false }: { children: React.ReactNode; adminOnly?: boolean }) {
   // const { user } = useAuth(); //TODO: return back when implement auth!
   //
   // if (!user) {
   //   return <Navigate to="/login" />;
   // }
   //
-  // if (adminOnly && user.role !== 'admin') {
+  // if (_adminOnly && user.role !== 'admin') {
   //   return <Navigate to="/dashboard" />;
   // }
 
@@ -86,8 +87,8 @@ function AppRoutes() {
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <LanguageProvider>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
         <AuthProvider>
           <div className="min-h-screen bg-background">
             <Header />
@@ -95,7 +96,7 @@ export default function App() {
             <Toaster />
           </div>
         </AuthProvider>
-      </LanguageProvider>
-    </BrowserRouter>
+      </BrowserRouter>
+    </QueryClientProvider>
   );
 }

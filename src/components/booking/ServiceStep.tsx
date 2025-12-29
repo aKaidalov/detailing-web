@@ -1,6 +1,5 @@
-import { useLanguage } from '../../contexts/LanguageContext';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
-import { ServiceType, VehicleType } from '../../types/booking';
+import { Card, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import type { ServiceType, VehicleType } from '../../types/booking';
 import { services } from '../../data/mockData';
 import { CheckCircle } from 'lucide-react';
 
@@ -11,15 +10,13 @@ interface ServiceStepProps {
 }
 
 export function ServiceStep({ vehicleType, selected, onSelect }: ServiceStepProps) {
-  const { t } = useLanguage();
-
   const availableServices = services.filter(
     (service) => service.prices[vehicleType] !== undefined
   );
 
   return (
     <div>
-      <h3 className="mb-6">{t('booking.step.service')}</h3>
+      <h3 className="mb-6">Select Service</h3>
       <div className="grid grid-cols-1 gap-4">
         {availableServices.map((service) => (
           <Card
@@ -32,9 +29,9 @@ export function ServiceStep({ vehicleType, selected, onSelect }: ServiceStepProp
             <CardHeader>
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <CardTitle>{t(`service.${service.id}`)}</CardTitle>
+                  <CardTitle>{service.name}</CardTitle>
                   <CardDescription className="mt-2">
-                    {t(`service.${service.id}.desc`)}
+                    {service.description}
                   </CardDescription>
                 </div>
                 <div className="flex items-center gap-3">

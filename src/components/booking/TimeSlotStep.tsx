@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-import { useLanguage } from '../../contexts/LanguageContext';
+import { useState } from 'react';
 import { Card, CardContent } from '../ui/card';
 import { Calendar } from '../ui/calendar';
 import { generateTimeSlots } from '../../data/mockData';
@@ -11,9 +10,8 @@ interface TimeSlotStepProps {
 }
 
 export function TimeSlotStep({ selected, onSelect }: TimeSlotStepProps) {
-  const { t } = useLanguage();
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
-  const [timeSlots, setTimeSlots] = useState(generateTimeSlots());
+  const [timeSlots] = useState(generateTimeSlots());
 
   const availableSlotsForDate = selectedDate
     ? timeSlots.filter(
@@ -23,7 +21,7 @@ export function TimeSlotStep({ selected, onSelect }: TimeSlotStepProps) {
 
   return (
     <div>
-      <h3 className="mb-6">{t('booking.step.time')}</h3>
+      <h3 className="mb-6">Choose Time</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="flex flex-col items-center md:items-start">
           <h4 className="mb-4">Select Date</h4>

@@ -1,4 +1,3 @@
-import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
@@ -14,12 +13,19 @@ import {
   TableHeader,
   TableRow,
 } from '../components/ui/table';
-import { mockBookings } from '../data/mockData';
+import { mockBookings, services } from '../data/mockData';
 import { useNavigate } from 'react-router-dom';
 import { Calendar, User, Plus, Eye } from 'lucide-react';
 
+const statusLabels: Record<string, string> = {
+  pending: 'Pending',
+  confirmed: 'Confirmed',
+  inProgress: 'In Progress',
+  completed: 'Completed',
+  cancelled: 'Cancelled',
+};
+
 export function ClientDashboard() {
-  const { t } = useLanguage();
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -40,6 +46,11 @@ export function ClientDashboard() {
     }
   };
 
+  const getServiceName = (serviceId: string) => {
+    const service = services.find(s => s.id === serviceId);
+    return service?.name || serviceId;
+  };
+
   return (
     <div className="min-h-[calc(100vh-80px)] py-8 px-4">
       <div className="container mx-auto max-w-6xl">
@@ -52,20 +63,20 @@ export function ClientDashboard() {
           <TabsList>
             <TabsTrigger value="bookings">
               <Calendar className="w-4 h-4 mr-2" />
-              {t('client.bookings')}
+              My Bookings
             </TabsTrigger>
             <TabsTrigger value="profile">
               <User className="w-4 h-4 mr-2" />
-              {t('client.profile')}
+              Profile
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="bookings" className="space-y-6">
             <div className="flex justify-between items-center">
-              <h2>{t('booking.myBookings')}</h2>
+              <h2>My Bookings</h2>
               <Button onClick={() => navigate('/booking')}>
                 <Plus className="w-4 h-4 mr-2" />
-                {t('client.newBooking')}
+                New Booking
               </Button>
             </div>
 
@@ -86,13 +97,13 @@ export function ClientDashboard() {
                     {mockBookings.map((booking) => (
                       <TableRow key={booking.id}>
                         <TableCell>#{booking.id}</TableCell>
-                        <TableCell>{t(`service.${booking.service}`)}</TableCell>
+                        <TableCell>{getServiceName(booking.service)}</TableCell>
                         <TableCell>
                           {new Date(booking.timeSlot).toLocaleString()}
                         </TableCell>
                         <TableCell>
                           <Badge className={getStatusColor(booking.status)}>
-                            {t(`booking.status.${booking.status}`)}
+                            {statusLabels[booking.status]}
                           </Badge>
                         </TableCell>
                         <TableCell>€{booking.totalPrice}</TableCell>
@@ -124,18 +135,18 @@ export function ClientDashboard() {
               </CardHeader>
               <CardContent className="space-y-4 max-w-md">
                 <div className="space-y-2">
-                  <Label htmlFor="name">{t('auth.name')}</Label>
+                  <Label htmlFor="name">Full Name</Label>
                   <Input id="name" defaultValue={user?.name} />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email">{t('auth.email')}</Label>
+                  <Label htmlFor="email">Email</Label>
                   <Input id="email" type="email" defaultValue={user?.email} />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="phone">{t('auth.phone')}</Label>
+                  <Label htmlFor="phone">Phone Number</Label>
                   <Input id="phone" type="tel" defaultValue={user?.phone} />
                 </div>
-                <Button>{t('common.save')}</Button>
+                <Button>Save</Button>
               </CardContent>
             </Card>
           </TabsContent>

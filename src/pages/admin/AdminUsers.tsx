@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useLanguage } from '../../contexts/LanguageContext';
 import { Card, CardContent } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
@@ -48,7 +47,6 @@ const mockUsers = [
 ];
 
 export function AdminUsers() {
-  const { t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredUsers = mockUsers.filter((user) => {
@@ -63,7 +61,7 @@ export function AdminUsers() {
   return (
     <div className="space-y-6">
       <div>
-        <h2>{t('admin.users')}</h2>
+        <h2>Users</h2>
         <p className="text-muted-foreground mt-1">
           Manage customer accounts and permissions
         </p>

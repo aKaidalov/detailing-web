@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useLanguage } from '../../contexts/LanguageContext';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
@@ -56,14 +55,13 @@ const notificationTemplates = [
 ];
 
 export function AdminNotifications() {
-  const { t } = useLanguage();
   const [open, setOpen] = useState(false);
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2>{t('admin.notifications')}</h2>
+          <h2>Notifications</h2>
           <p className="text-muted-foreground mt-1">
             Manage notification templates and settings
           </p>
@@ -126,10 +124,10 @@ export function AdminNotifications() {
               </div>
               <div className="flex justify-end gap-2">
                 <Button variant="outline" onClick={() => setOpen(false)}>
-                  {t('common.cancel')}
+                  Cancel
                 </Button>
                 <Button onClick={() => setOpen(false)}>
-                  {t('common.save')}
+                  Save
                 </Button>
               </div>
             </form>

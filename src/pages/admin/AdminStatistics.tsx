@@ -1,13 +1,10 @@
-import { useLanguage } from '../../contexts/LanguageContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
-import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Legend, Tooltip } from 'recharts';
+import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from 'recharts';
 import { TrendingUp, Calendar, DollarSign } from 'lucide-react';
 
 export function AdminStatistics() {
-  const { t } = useLanguage();
-
   const revenueByMonth = [
     { month: 'Jan', revenue: 4500 },
     { month: 'Feb', revenue: 5200 },
@@ -35,7 +32,7 @@ export function AdminStatistics() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2>{t('admin.statistics')}</h2>
+          <h2>Statistics</h2>
           <p className="text-muted-foreground mt-1">
             Detailed analytics and business insights
           </p>

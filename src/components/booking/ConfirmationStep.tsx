@@ -1,8 +1,7 @@
-import { useLanguage } from '../../contexts/LanguageContext';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Separator } from '../ui/separator';
 import { services, addOns, deliveryOptions } from '../../data/mockData';
-import { VehicleType, ServiceType, DeliveryOption } from '../../types/booking';
+import type { VehicleType, ServiceType, DeliveryOption } from '../../types/booking';
 
 interface ConfirmationStepProps {
   bookingData: {
@@ -18,9 +17,18 @@ interface ConfirmationStepProps {
   onSubmit: () => void;
 }
 
-export function ConfirmationStep({ bookingData }: ConfirmationStepProps) {
-  const { t } = useLanguage();
+const vehicleLabels: Record<VehicleType, string> = {
+  motorcycle: 'Motorcycle',
+  car: 'Car',
+  van: 'Van',
+};
 
+const deliveryLabels: Record<DeliveryOption, string> = {
+  pickup: 'We pick up the car',
+  myself: 'I bring it myself',
+};
+
+export function ConfirmationStep({ bookingData }: ConfirmationStepProps) {
   const selectedService = services.find((s) => s.id === bookingData.service);
   const selectedDelivery = deliveryOptions.find((d) => d.id === bookingData.delivery);
   const selectedAddOns = addOns.filter((a) => bookingData.addOns.includes(a.id));
@@ -32,7 +40,7 @@ export function ConfirmationStep({ bookingData }: ConfirmationStepProps) {
 
   return (
     <div>
-      <h3 className="mb-6">{t('booking.step.confirm')}</h3>
+      <h3 className="mb-6">Confirmation</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <Card>
@@ -42,12 +50,12 @@ export function ConfirmationStep({ bookingData }: ConfirmationStepProps) {
             <CardContent className="space-y-4">
               <div>
                 <p className="text-muted-foreground mb-1">Vehicle Type</p>
-                <p>{t(`vehicle.${bookingData.vehicleType}`)}</p>
+                <p>{vehicleLabels[bookingData.vehicleType]}</p>
               </div>
               <Separator />
               <div>
                 <p className="text-muted-foreground mb-1">Service</p>
-                <p>{t(`service.${bookingData.service}`)}</p>
+                <p>{selectedService?.name}</p>
               </div>
               {selectedAddOns.length > 0 && (
                 <>
@@ -56,7 +64,7 @@ export function ConfirmationStep({ bookingData }: ConfirmationStepProps) {
                     <p className="text-muted-foreground mb-1">Add-ons</p>
                     <ul className="space-y-1">
                       {selectedAddOns.map((addon) => (
-                        <li key={addon.id}>{t(`addon.${addon.id}`)}</li>
+                        <li key={addon.id}>{addon.name}</li>
                       ))}
                     </ul>
                   </div>
@@ -65,7 +73,7 @@ export function ConfirmationStep({ bookingData }: ConfirmationStepProps) {
               <Separator />
               <div>
                 <p className="text-muted-foreground mb-1">Delivery</p>
-                <p>{t(`delivery.${bookingData.delivery}`)}</p>
+                <p>{deliveryLabels[bookingData.delivery]}</p>
               </div>
               <Separator />
               <div>

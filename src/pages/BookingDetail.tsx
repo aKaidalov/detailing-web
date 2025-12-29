@@ -1,15 +1,32 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { useLanguage } from '../contexts/LanguageContext';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { Separator } from '../components/ui/separator';
-import { mockBookings } from '../data/mockData';
-import { ChevronLeft, Calendar, User, Car, Package, MapPin, Clock } from 'lucide-react';
+import { mockBookings, services, addOns } from '../data/mockData';
+import { ChevronLeft, Calendar, User, Car, Package, MapPin } from 'lucide-react';
+
+const vehicleLabels: Record<string, string> = {
+  motorcycle: 'Motorcycle',
+  car: 'Car',
+  van: 'Van',
+};
+
+const deliveryLabels: Record<string, string> = {
+  pickup: 'We pick up the car',
+  myself: 'I bring it myself',
+};
+
+const statusLabels: Record<string, string> = {
+  pending: 'Pending',
+  confirmed: 'Confirmed',
+  inProgress: 'In Progress',
+  completed: 'Completed',
+  cancelled: 'Cancelled',
+};
 
 export function BookingDetail() {
   const { id } = useParams();
-  const { t } = useLanguage();
   const navigate = useNavigate();
 
   const booking = mockBookings.find((b) => b.id === id);
@@ -39,12 +56,15 @@ export function BookingDetail() {
     }
   };
 
+  const service = services.find(s => s.id === booking.service);
+  const bookingAddOns = addOns.filter(a => booking.addOns.includes(a.id));
+
   return (
     <div className="min-h-[calc(100vh-80px)] py-8 px-4">
       <div className="container mx-auto max-w-4xl">
         <Button variant="ghost" onClick={() => navigate(-1)} className="mb-6">
           <ChevronLeft className="w-4 h-4 mr-2" />
-          {t('common.back')}
+          Back
         </Button>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -53,7 +73,7 @@ export function BookingDetail() {
               <div className="flex items-center justify-between">
                 <CardTitle>Booking #{booking.id}</CardTitle>
                 <Badge className={getStatusColor(booking.status)}>
-                  {t(`booking.status.${booking.status}`)}
+                  {statusLabels[booking.status]}
                 </Badge>
               </div>
             </CardHeader>
@@ -63,8 +83,8 @@ export function BookingDetail() {
                 <div>
                   <p className="text-muted-foreground">Vehicle & Service</p>
                   <p>
-                    {t(`vehicle.${booking.vehicleType}`)} -{' '}
-                    {t(`service.${booking.service}`)}
+                    {vehicleLabels[booking.vehicleType]} -{' '}
+                    {service?.name}
                   </p>
                 </div>
               </div>
@@ -81,10 +101,10 @@ export function BookingDetail() {
                 <MapPin className="w-5 h-5 mt-0.5 text-muted-foreground" />
                 <div>
                   <p className="text-muted-foreground">Delivery Option</p>
-                  <p>{t(`delivery.${booking.delivery}`)}</p>
+                  <p>{deliveryLabels[booking.delivery]}</p>
                 </div>
               </div>
-              {booking.addOns.length > 0 && (
+              {bookingAddOns.length > 0 && (
                 <>
                   <Separator />
                   <div className="flex items-start gap-3">
@@ -92,8 +112,8 @@ export function BookingDetail() {
                     <div>
                       <p className="text-muted-foreground">Add-ons</p>
                       <ul className="space-y-1">
-                        {booking.addOns.map((addon) => (
-                          <li key={addon}>{t(`addon.${addon}`)}</li>
+                        {bookingAddOns.map((addon) => (
+                          <li key={addon.id}>{addon.name}</li>
                         ))}
                       </ul>
                     </div>

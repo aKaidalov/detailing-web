@@ -1,6 +1,5 @@
-import { useLanguage } from '../../contexts/LanguageContext';
 import { Card, CardContent } from '../ui/card';
-import { DeliveryOption, VehicleType } from '../../types/booking';
+import type { DeliveryOption, VehicleType } from '../../types/booking';
 import { deliveryOptions } from '../../data/mockData';
 import { CheckCircle, Car, User } from 'lucide-react';
 
@@ -11,8 +10,6 @@ interface DeliveryStepProps {
 }
 
 export function DeliveryStep({ vehicleType, selected, onSelect }: DeliveryStepProps) {
-  const { t } = useLanguage();
-
   const availableOptions = deliveryOptions.filter((option) =>
     option.applicableVehicles.includes(vehicleType)
   );
@@ -28,7 +25,7 @@ export function DeliveryStep({ vehicleType, selected, onSelect }: DeliveryStepPr
 
   return (
     <div>
-      <h3 className="mb-6">{t('booking.step.delivery')}</h3>
+      <h3 className="mb-6">Delivery Option</h3>
       <div className="grid grid-cols-1 gap-4">
         {availableOptions.map((option) => {
           const Icon = getIcon(option.id);
@@ -44,7 +41,7 @@ export function DeliveryStep({ vehicleType, selected, onSelect }: DeliveryStepPr
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <Icon className="w-6 h-6 text-primary" />
-                    <p>{t(`delivery.${option.id}`)}</p>
+                    <p>{option.name}</p>
                   </div>
                   <div className="flex items-center gap-3">
                     <span className="font-semibold">

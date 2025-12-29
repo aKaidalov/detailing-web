@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { useLanguage } from '../../contexts/LanguageContext';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
@@ -25,14 +24,13 @@ import { services } from '../../data/mockData';
 import { Plus, Edit, Trash } from 'lucide-react';
 
 export function AdminServices() {
-  const { t } = useLanguage();
   const [open, setOpen] = useState(false);
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2>{t('admin.services')}</h2>
+          <h2>Services</h2>
           <p className="text-muted-foreground mt-1">
             Manage your service offerings and pricing
           </p>
@@ -41,7 +39,7 @@ export function AdminServices() {
           <DialogTrigger asChild>
             <Button>
               <Plus className="w-4 h-4 mr-2" />
-              {t('common.add')} Service
+              Add Service
             </Button>
           </DialogTrigger>
           <DialogContent>
@@ -80,10 +78,10 @@ export function AdminServices() {
               </div>
               <div className="flex justify-end gap-2">
                 <Button variant="outline" onClick={() => setOpen(false)}>
-                  {t('common.cancel')}
+                  Cancel
                 </Button>
                 <Button onClick={() => setOpen(false)}>
-                  {t('common.save')}
+                  Save
                 </Button>
               </div>
             </form>
@@ -107,9 +105,9 @@ export function AdminServices() {
             <TableBody>
               {services.map((service) => (
                 <TableRow key={service.id}>
-                  <TableCell>{t(`service.${service.id}`)}</TableCell>
+                  <TableCell>{service.name}</TableCell>
                   <TableCell className="max-w-md truncate">
-                    {t(`service.${service.id}.desc`)}
+                    {service.description}
                   </TableCell>
                   <TableCell>
                     {service.prices.motorcycle

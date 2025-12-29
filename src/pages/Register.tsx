@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -8,7 +7,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../co
 import { useNavigate } from 'react-router-dom';
 
 export function Register() {
-  const { t } = useLanguage();
   const { register } = useAuth();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -33,7 +31,7 @@ export function Register() {
     <div className="min-h-[calc(100vh-80px)] flex items-center justify-center px-4 py-12">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>{t('auth.register.title')}</CardTitle>
+          <CardTitle>Create an Account</CardTitle>
           <CardDescription>
             Fill in your details to create a new account
           </CardDescription>
@@ -41,7 +39,7 @@ export function Register() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="name">{t('auth.name')}</Label>
+              <Label htmlFor="name">Full Name</Label>
               <Input
                 id="name"
                 type="text"
@@ -52,7 +50,7 @@ export function Register() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email">{t('auth.email')}</Label>
+              <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -63,7 +61,7 @@ export function Register() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="phone">{t('auth.phone')}</Label>
+              <Label htmlFor="phone">Phone Number</Label>
               <Input
                 id="phone"
                 type="tel"
@@ -74,7 +72,7 @@ export function Register() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">{t('auth.password')}</Label>
+              <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
                 type="password"
@@ -85,7 +83,7 @@ export function Register() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">{t('auth.confirmPassword')}</Label>
+              <Label htmlFor="confirmPassword">Confirm Password</Label>
               <Input
                 id="confirmPassword"
                 type="password"
@@ -96,7 +94,7 @@ export function Register() {
               />
             </div>
             <Button type="submit" className="w-full">
-              {t('common.register')}
+              Register
             </Button>
           </form>
 
@@ -106,7 +104,7 @@ export function Register() {
               className="w-full"
               onClick={() => navigate('/login')}
             >
-              Already have an account? {t('common.login')}
+              Already have an account? Login
             </Button>
           </div>
         </CardContent>
