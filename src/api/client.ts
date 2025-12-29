@@ -5,6 +5,10 @@ async function handleResponse<T>(response: Response): Promise<T> {
     const error = await response.text();
     throw new Error(error || `HTTP error! status: ${response.status}`);
   }
+  // Handle 204 No Content
+  if (response.status === 204) {
+    return undefined as T;
+  }
   return response.json();
 }
 

@@ -163,7 +163,7 @@ export function ConfirmationStep({ bookingData, onUpdate }: ConfirmationStepProp
                   type="text"
                   value={bookingData.vehicleRegNumber}
                   onChange={(e) => onUpdate({ vehicleRegNumber: e.target.value })}
-                  placeholder="ABC 123"
+                  placeholder="123ABC"
                   required
                 />
               </div>
