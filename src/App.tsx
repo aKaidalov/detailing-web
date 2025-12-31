@@ -5,7 +5,6 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { Header } from './components/Header';
 import { Landing } from './pages/Landing';
 import { Login } from './pages/Login';
-import { Register } from './pages/Register';
 import { Booking } from './pages/Booking';
 import { BookingSuccess } from './pages/BookingSuccess';
 import { CancelBooking } from './pages/CancelBooking';
@@ -30,7 +29,7 @@ function ProtectedRoute({ children, adminOnly = false }: { children: React.React
   }
 
   if (!user) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/admin/login" />;
   }
 
   if (adminOnly && user.role !== 'ADMIN') {
@@ -45,8 +44,7 @@ function AppRoutes() {
     <Routes>
       {/* Public routes */}
       <Route path="/" element={<Landing />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
+      <Route path="/admin/login" element={<Login />} />
       <Route path="/booking" element={<Booking />} />
       <Route path="/booking/success" element={<BookingSuccess />} />
       <Route path="/cancel/:reference" element={<CancelBooking />} />

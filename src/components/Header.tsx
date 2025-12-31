@@ -57,14 +57,9 @@ export function Header() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm" onClick={() => navigate('/login')}>
-                Login
-              </Button>
-              <Button size="sm" onClick={() => navigate('/register')}>
-                Register
-              </Button>
-            </div>
+            <Button size="sm" onClick={() => navigate('/booking')}>
+              Book Now
+            </Button>
           )}
         </div>
       </div>
