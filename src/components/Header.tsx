@@ -7,11 +7,16 @@ import {
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
 import { User, LogOut, LayoutDashboard } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export function Header() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const isBookingPage = location.pathname.startsWith('/booking');
+  const isAdminLoginPage = location.pathname === '/admin/login';
+  const hideBookButton = isBookingPage || isAdminLoginPage;
 
   const handleLogout = () => {
     logout();
@@ -57,9 +62,11 @@ export function Header() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button size="sm" onClick={() => navigate('/booking')}>
-              Book Now
-            </Button>
+            !hideBookButton && (
+              <Button size="sm" onClick={() => navigate('/booking')}>
+                Book Now
+              </Button>
+            )
           )}
         </div>
       </div>
