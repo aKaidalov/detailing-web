@@ -55,7 +55,7 @@ export function ClientDashboard() {
     <div className="min-h-[calc(100vh-80px)] py-8 px-4">
       <div className="container mx-auto max-w-6xl">
         <div className="mb-8">
-          <h1>Welcome back, {user?.name}!</h1>
+          <h1>Welcome back, {user?.email}!</h1>
           <p className="text-muted-foreground mt-2">Manage your bookings and profile</p>
         </div>
 
@@ -135,18 +135,12 @@ export function ClientDashboard() {
               </CardHeader>
               <CardContent className="space-y-4 max-w-md">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Full Name</Label>
-                  <Input id="name" defaultValue={user?.name} />
-                </div>
-                <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
-                  <Input id="email" type="email" defaultValue={user?.email} />
+                  <Input id="email" type="email" defaultValue={user?.email} disabled />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Phone Number</Label>
-                  <Input id="phone" type="tel" defaultValue={user?.phone} />
-                </div>
-                <Button>Save</Button>
+                <p className="text-sm text-muted-foreground">
+                  Profile editing is not available yet.
+                </p>
               </CardContent>
             </Card>
           </TabsContent>

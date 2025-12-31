@@ -154,12 +154,16 @@ export interface NotificationTemplate {
   isActive: boolean;
 }
 
+// User Role
+export type UserRole = 'ADMIN' | 'CLIENT';
+
 // Login
 export interface LoginRequest {
-  username: string;
+  email: string;
   password: string;
 }
 
 export interface LoginResponse {
-  message: string;
+  email: string;
+  role: UserRole;
 }

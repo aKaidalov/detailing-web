@@ -38,13 +38,13 @@ export function Header() {
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm">
                   <User className="w-4 h-4 mr-2" />
-                  {user.name}
+                  {user.email}
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent>
+              <DropdownMenuContent align="end">
                 <DropdownMenuItem
                   onClick={() =>
-                    navigate(user.role === 'admin' ? '/admin' : '/dashboard')
+                    navigate(user.role === 'ADMIN' ? '/admin' : '/dashboard')
                   }
                 >
                   <LayoutDashboard className="w-4 h-4 mr-2" />

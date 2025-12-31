@@ -4,3 +4,5 @@ export { useAddOns } from './useAddOns';
 export { useDeliveryTypes } from './useDeliveryTypes';
 export { useTimeSlots } from './useTimeSlots';
 export { useCreateBooking } from './useCreateBooking';
+export { useLogin } from './useLogin';
+export { useLogout } from './useLogout';

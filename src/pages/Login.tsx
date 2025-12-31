@@ -5,35 +5,48 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { useNavigate } from 'react-router-dom';
-import { Separator } from '../components/ui/separator';
+import { Alert, AlertDescription } from '../components/ui/alert';
+import { AlertCircle, Loader2 } from 'lucide-react';
 
 export function Login() {
-  const { login, continueAsGuest } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await login(email, password);
-    navigate('/dashboard');
-  };
+    setError(null);
+    setIsLoading(true);
 
-  const handleGuestContinue = () => {
-    continueAsGuest();
-    navigate('/booking');
+    try {
+      await login(email, password);
+      navigate('/admin');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Login failed. Please check your credentials.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <div className="min-h-[calc(100vh-80px)] flex items-center justify-center px-4 py-12">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>Login to Your Account</CardTitle>
+          <CardTitle>Admin Login</CardTitle>
           <CardDescription>
-            Enter your credentials to access your account
+            Enter your credentials to access the admin panel
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {error && (
+            <Alert variant="destructive" className="mb-4">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
@@ -43,7 +56,8 @@ export function Login() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                placeholder="your@email.com"
+                placeholder="admin@example.com"
+                disabled={isLoading}
               />
             </div>
             <div className="space-y-2">
@@ -55,38 +69,20 @@ export function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 placeholder="••••••••"
+                disabled={isLoading}
               />
             </div>
-            <Button type="submit" className="w-full">
-              Login
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Logging in...
+                </>
+              ) : (
+                'Login'
+              )}
             </Button>
           </form>
-
-          <div className="mt-6">
-            <div className="relative">
-              <Separator />
-              <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-2 text-muted-foreground">
-                or
-              </span>
-            </div>
-          </div>
-
-          <div className="mt-6 space-y-3">
-            <Button
-              variant="outline"
-              className="w-full"
-              onClick={handleGuestContinue}
-            >
-              Continue as Guest
-            </Button>
-            <Button
-              variant="ghost"
-              className="w-full"
-              onClick={() => navigate('/register')}
-            >
-              Register
-            </Button>
-          </div>
         </CardContent>
       </Card>
     </div>

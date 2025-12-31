@@ -1,9 +1,7 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from './api/queryClient';
-import { AuthProvider,
-    // useAuth //TODO: return back when implement auth!
-} from './contexts/AuthContext';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { Header } from './components/Header';
 import { Landing } from './pages/Landing';
 import { Login } from './pages/Login';
@@ -25,18 +23,19 @@ import { AdminSettings } from './pages/admin/AdminSettings';
 import { Toaster } from './components/ui/sonner';
 
 function ProtectedRoute({ children, adminOnly = false }: { children: React.ReactNode; adminOnly?: boolean }) {
-  // const { user } = useAuth(); //TODO: return back when implement auth!
-  //
-  // if (!user) {
-  //   return <Navigate to="/login" />;
-  // }
-  //
-  // if (adminOnly && user.role !== 'admin') {
-  //   return <Navigate to="/dashboard" />;
-  // }
+  const { user, isLoading } = useAuth();
 
-  // Suppress unused variable warning until auth is implemented
-  void adminOnly;
+  if (isLoading) {
+    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
+  }
+
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
+
+  if (adminOnly && user.role !== 'ADMIN') {
+    return <Navigate to="/" />;
+  }
 
   return <>{children}</>;
 }
