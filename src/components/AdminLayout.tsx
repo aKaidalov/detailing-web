@@ -8,7 +8,10 @@ import {
   Settings,
   BarChart3,
   Bell,
-  Wrench,
+  Car,
+  Package,
+  PlusCircle,
+  Truck,
 } from 'lucide-react';
 
 export function AdminLayout() {
@@ -17,19 +20,35 @@ export function AdminLayout() {
 
   const menuItems = [
     {
-      title: 'Admin Dashboard',
+      title: 'Dashboard',
       icon: LayoutDashboard,
       path: '/admin',
-    },
-    {
-      title: 'Services',
-      icon: Wrench,
-      path: '/admin/services',
     },
     {
       title: 'Bookings',
       icon: Calendar,
       path: '/admin/bookings',
+    },
+    // Catalog section
+    {
+      title: 'Vehicle Types',
+      icon: Car,
+      path: '/admin/vehicle-types',
+    },
+    {
+      title: 'Packages',
+      icon: Package,
+      path: '/admin/packages',
+    },
+    {
+      title: 'Add-ons',
+      icon: PlusCircle,
+      path: '/admin/add-ons',
+    },
+    {
+      title: 'Delivery Types',
+      icon: Truck,
+      path: '/admin/delivery-types',
     },
     {
       title: 'Time Slots',

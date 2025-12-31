@@ -12,8 +12,11 @@ import { ClientDashboard } from './pages/ClientDashboard';
 import { BookingDetail } from './pages/BookingDetail';
 import { AdminLayout } from './components/AdminLayout';
 import { AdminDashboard } from './pages/admin/AdminDashboard';
-import { AdminServices } from './pages/admin/AdminServices';
 import { AdminBookings } from './pages/admin/AdminBookings';
+import { AdminVehicleTypes } from './pages/admin/AdminVehicleTypes';
+import { AdminPackages } from './pages/admin/AdminPackages';
+import { AdminAddOns } from './pages/admin/AdminAddOns';
+import { AdminDeliveryTypes } from './pages/admin/AdminDeliveryTypes';
 import { AdminTimeSlots } from './pages/admin/AdminTimeSlots';
 import { AdminUsers } from './pages/admin/AdminUsers';
 import { AdminNotifications } from './pages/admin/AdminNotifications';
@@ -77,8 +80,11 @@ function AppRoutes() {
         }
       >
         <Route index element={<AdminDashboard />} />
-        <Route path="services" element={<AdminServices />} />
         <Route path="bookings" element={<AdminBookings />} />
+        <Route path="vehicle-types" element={<AdminVehicleTypes />} />
+        <Route path="packages" element={<AdminPackages />} />
+        <Route path="add-ons" element={<AdminAddOns />} />
+        <Route path="delivery-types" element={<AdminDeliveryTypes />} />
         <Route path="timeslots" element={<AdminTimeSlots />} />
         <Route path="users" element={<AdminUsers />} />
         <Route path="notifications" element={<AdminNotifications />} />

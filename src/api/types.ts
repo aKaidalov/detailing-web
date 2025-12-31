@@ -159,6 +159,49 @@ export interface BookingStatusUpdateRequest {
   status: BookingStatus;
 }
 
+// Admin CRUD Request Types
+export interface CreateVehicleTypeRequest {
+  name: string;
+  description?: string;
+  basePrice: number;
+  isDeliverable: boolean;
+  displayOrder: number;
+  isActive: boolean;
+}
+
+export type UpdateVehicleTypeRequest = CreateVehicleTypeRequest;
+
+export interface CreatePackageRequest {
+  name: string;
+  description?: string;
+  price: number;
+  displayOrder: number;
+  isActive: boolean;
+  vehicleTypeIds: number[];
+}
+
+export type UpdatePackageRequest = CreatePackageRequest;
+
+export interface CreateAddOnRequest {
+  name: string;
+  description?: string;
+  price: number;
+  displayOrder: number;
+  isActive: boolean;
+  packageIds: number[];
+}
+
+export type UpdateAddOnRequest = CreateAddOnRequest;
+
+export interface CreateDeliveryTypeRequest {
+  name: string;
+  price: number;
+  requiresAddress: boolean;
+  isActive: boolean;
+}
+
+export type UpdateDeliveryTypeRequest = CreateDeliveryTypeRequest;
+
 // Business Settings
 export interface BusinessSettings {
   businessName: string;
