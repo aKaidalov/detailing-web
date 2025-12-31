@@ -104,21 +104,59 @@ export interface BookingResponse {
   updatedAt: string;
 }
 
-// Admin Booking List Item (simplified for list view)
-export interface AdminBookingListItem {
+// Booking Add-on (in booking response)
+export interface BookingAddOnDto {
+  id: number;
+  name: string;
+  price: number;
+}
+
+// Admin Booking DTO (matches backend BookingDto - flattened structure)
+export interface AdminBookingDto {
   id: number;
   reference: string;
-  status: BookingStatus;
-  vehicleTypeName: string;
-  packageName: string;
-  timeSlotDate: string;
-  timeSlotTime: string;
-  totalPrice: number;
   firstName: string;
   lastName: string;
   email: string;
-  phoneNumber: string;
+  phone: string;
+  vehicleRegNumber: string;
+  totalPrice: number;
+  notes: string | null;
+  address: string | null;
+  status: BookingStatus;
+
+  // Flattened vehicle type
+  vehicleTypeId: number;
+  vehicleTypeName: string;
+  vehicleTypeBasePrice: number;
+
+  // Flattened package
+  packageId: number;
+  packageName: string;
+  packagePrice: number;
+
+  // Flattened time slot
+  timeSlotId: number;
+  timeSlotDate: string; // "2025-01-15"
+  timeSlotStartTime: string; // "09:00:00"
+  timeSlotEndTime: string; // "11:00:00"
+
+  // Flattened delivery type
+  deliveryTypeId: number;
+  deliveryTypeName: string;
+  deliveryTypePrice: number;
+
+  // Add-ons
+  addOns: BookingAddOnDto[];
+
+  // Audit fields
   createdAt: string;
+  updatedAt: string;
+}
+
+// Booking Status Update Request
+export interface BookingStatusUpdateRequest {
+  status: BookingStatus;
 }
 
 // Business Settings
