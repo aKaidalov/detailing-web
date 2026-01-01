@@ -40,22 +40,25 @@ export interface DeliveryType {
   isActive: boolean;
 }
 
+// Time Slot Status
+export type TimeSlotStatus = 'AVAILABLE' | 'BOOKED' | 'BLOCKED';
+
 // Time Slot
 export interface TimeSlot {
   id: number;
   date: string; // "2025-01-15"
-  startTime: string; // "09:00"
-  endTime: string; // "11:00"
-  status: 'AVAILABLE' | 'BOOKED' | 'BLOCKED';
+  status: TimeSlotStatus;
+  timeSlotTemplateId: number;
+  // Flattened from template
+  startTime: string; // "09:00:00"
+  endTime: string; // "11:00:00"
 }
 
 // Time Slot Template
 export interface TimeSlotTemplate {
   id: number;
-  name: string;
-  startTime: string;
-  endTime: string;
-  slotDuration: number;
+  startTime: string; // "09:00:00"
+  endTime: string; // "11:00:00"
   isActive: boolean;
 }
 
@@ -203,6 +206,26 @@ export interface CreateDeliveryTypeRequest {
 }
 
 export type UpdateDeliveryTypeRequest = CreateDeliveryTypeRequest;
+
+export interface CreateTimeSlotTemplateRequest {
+  startTime: string; // "09:00:00"
+  endTime: string; // "11:00:00"
+  isActive: boolean;
+}
+
+export type UpdateTimeSlotTemplateRequest = CreateTimeSlotTemplateRequest;
+
+export interface CreateTimeSlotRequest {
+  date: string; // "2025-01-15"
+  timeSlotTemplateId: number;
+  status?: TimeSlotStatus;
+}
+
+export interface UpdateTimeSlotRequest {
+  date?: string;
+  timeSlotTemplateId?: number;
+  status?: TimeSlotStatus;
+}
 
 // Business Settings
 export interface BusinessSettings {

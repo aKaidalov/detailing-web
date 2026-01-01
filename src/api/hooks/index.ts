@@ -41,3 +41,19 @@ export {
   useUpdateDeliveryType,
   useDeleteDeliveryType,
 } from './useAdminDeliveryTypes';
+
+// Admin time slot template hooks
+export {
+  useAdminTimeSlotTemplates,
+  useCreateTimeSlotTemplate,
+  useUpdateTimeSlotTemplate,
+  useDeleteTimeSlotTemplate,
+} from './useAdminTimeSlotTemplates';
+
+// Admin time slot hooks
+export {
+  useAdminTimeSlots,
+  useCreateTimeSlot,
+  useUpdateTimeSlot,
+  useDeleteTimeSlot,
+} from './useAdminTimeSlots';
