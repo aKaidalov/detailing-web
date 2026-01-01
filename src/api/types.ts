@@ -227,36 +227,58 @@ export interface UpdateTimeSlotRequest {
   status?: TimeSlotStatus;
 }
 
-// Business Settings
+// Business Settings (matches backend BusinessSettingsDto)
 export interface BusinessSettings {
-  businessName: string;
-  phoneNumber: string;
+  name: string;
+  phone: string;
   email: string;
   address: string;
-  timezone: string;
-  currency: string;
 }
 
-// Analytics
+// Analytics Period
+export type AnalyticsPeriod = 'DAY' | 'WEEK' | 'MONTH';
+
+// Booking Analytics (matches backend BookingAnalyticsDto)
 export interface BookingAnalytics {
   period: string;
+  startDate: string;
+  endDate: string;
   totalBookings: number;
-  confirmedBookings: number;
-  cancelledBookings: number;
-  completedBookings: number;
+  pendingCount: number;
+  confirmedCount: number;
+  completedCount: number;
+  cancelledCount: number;
 }
 
+// Revenue Analytics (matches backend RevenueAnalyticsDto)
 export interface RevenueAnalytics {
   period: string;
+  startDate: string;
+  endDate: string;
   totalRevenue: number;
+  completedBookings: number;
   averageOrderValue: number;
 }
 
-// Notification Template
-export interface NotificationTemplate {
-  type: string;
+// Notification Type (matches backend NotificationType enum)
+export type NotificationType =
+  | 'BOOKING_CONFIRMATION'
+  | 'BOOKING_MODIFICATION'
+  | 'BOOKING_CANCELLATION';
+
+// Notification DTO (matches backend NotificationDto)
+export interface NotificationDto {
+  id: number;
+  type: NotificationType;
   subject: string;
-  bodyTemplate: string;
+  body: string;
+  isActive: boolean;
+}
+
+// Notification Update Request (matches backend NotificationUpdateRequest)
+export interface NotificationUpdateRequest {
+  subject: string;
+  body: string;
   isActive: boolean;
 }
 

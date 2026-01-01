@@ -57,3 +57,12 @@ export {
   useUpdateTimeSlot,
   useDeleteTimeSlot,
 } from './useAdminTimeSlots';
+
+// Analytics hooks
+export { useBookingAnalytics, useRevenueAnalytics } from './useAnalytics';
+
+// Notifications hooks
+export { useNotifications, useUpdateNotification } from './useNotifications';
+
+// Business settings hooks
+export { useBusinessSettings, useUpdateBusinessSettings } from './useBusinessSettings';

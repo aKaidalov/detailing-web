@@ -1,16 +1,10 @@
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
 import { Textarea } from '../../components/ui/textarea';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '../../components/ui/select';
+import { Switch } from '../../components/ui/switch';
 import {
   Table,
   TableBody,
@@ -25,203 +19,244 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '../../components/ui/dialog';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
-import { Plus, Edit, Trash, Mail, Bell } from 'lucide-react';
+import { Badge } from '../../components/ui/badge';
+import { Edit, Loader2, Mail } from 'lucide-react';
+import { useNotifications, useUpdateNotification } from '../../api/hooks';
+import type { NotificationDto, NotificationType } from '../../api/types';
 
-const notificationTemplates = [
-  {
-    id: '1',
-    name: 'Booking Confirmation',
-    type: 'email',
-    subject: 'Your booking has been confirmed',
-    content: 'Dear {{clientName}}, your booking for {{service}} on {{date}} has been confirmed.',
-  },
-  {
-    id: '2',
-    name: 'Booking Reminder',
-    type: 'email',
-    subject: 'Reminder: Booking tomorrow',
-    content: 'Dear {{clientName}}, this is a reminder about your booking tomorrow at {{time}}.',
-  },
-  {
-    id: '3',
-    name: 'Service Complete',
-    type: 'email',
-    subject: 'Your service is complete',
-    content: 'Thank you for choosing ADetailing! Your {{service}} is now complete.',
-  },
-];
+const typeLabels: Record<NotificationType, string> = {
+  BOOKING_CONFIRMATION: 'Booking Confirmation',
+  BOOKING_MODIFICATION: 'Booking Modification',
+  BOOKING_CANCELLATION: 'Booking Cancellation',
+};
 
 export function AdminNotifications() {
-  const [open, setOpen] = useState(false);
+  const { data: notifications, isLoading, error } = useNotifications();
+  const updateMutation = useUpdateNotification();
+
+  const [editingNotification, setEditingNotification] = useState<NotificationDto | null>(null);
+  const [formData, setFormData] = useState({
+    subject: '',
+    body: '',
+    isActive: true,
+  });
+
+  const handleEdit = (notification: NotificationDto) => {
+    setEditingNotification(notification);
+    setFormData({
+      subject: notification.subject,
+      body: notification.body,
+      isActive: notification.isActive,
+    });
+  };
+
+  const handleSave = async () => {
+    if (!editingNotification) return;
+
+    await updateMutation.mutateAsync({
+      type: editingNotification.type,
+      request: formData,
+    });
+    setEditingNotification(null);
+  };
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2>Notifications</h2>
-          <p className="text-muted-foreground mt-1">
-            Manage notification templates and settings
-          </p>
-        </div>
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="w-4 h-4 mr-2" />
-              Create Template
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>Create Notification Template</DialogTitle>
-              <DialogDescription>
-                Set up a new email or in-app notification template
-              </DialogDescription>
-            </DialogHeader>
-            <form className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="templateName">Template Name</Label>
-                <Input
-                  id="templateName"
-                  placeholder="e.g., Booking Confirmation"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="type">Notification Type</Label>
-                <Select defaultValue="email">
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="email">Email</SelectItem>
-                    <SelectItem value="inApp">In-App</SelectItem>
-                    <SelectItem value="both">Both</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="subject">Subject</Label>
-                <Input
-                  id="subject"
-                  placeholder="Email subject line"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="content">Content</Label>
-                <Textarea
-                  id="content"
-                  rows={6}
-                  placeholder="Use {{variables}} for dynamic content"
-                />
-              </div>
-              <div className="bg-muted p-3 rounded-md">
-                <p className="text-sm font-medium mb-2">Available Variables:</p>
-                <p className="text-sm text-muted-foreground">
-                  {'{{clientName}}, {{service}}, {{date}}, {{time}}, {{price}}'}
-                </p>
-              </div>
-              <div className="flex justify-end gap-2">
-                <Button variant="outline" onClick={() => setOpen(false)}>
-                  Cancel
-                </Button>
-                <Button onClick={() => setOpen(false)}>
-                  Save
-                </Button>
-              </div>
-            </form>
-          </DialogContent>
-        </Dialog>
+      <div>
+        <h2>Notifications</h2>
+        <p className="text-muted-foreground mt-1">
+          Manage email notification templates
+        </p>
       </div>
 
-      <Tabs defaultValue="templates">
-        <TabsList>
-          <TabsTrigger value="templates">
-            <Mail className="w-4 h-4 mr-2" />
-            Templates
-          </TabsTrigger>
-          <TabsTrigger value="settings">
-            <Bell className="w-4 h-4 mr-2" />
-            Settings
-          </TabsTrigger>
-        </TabsList>
+      {error && (
+        <Card className="border-destructive">
+          <CardContent className="pt-6">
+            <p className="text-destructive">Failed to load notifications. Please try again.</p>
+          </CardContent>
+        </Card>
+      )}
 
-        <TabsContent value="templates" className="mt-6">
-          <Card>
-            <CardContent className="pt-6">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Template Name</TableHead>
-                    <TableHead>Type</TableHead>
-                    <TableHead>Subject</TableHead>
-                    <TableHead>Actions</TableHead>
+      {isLoading ? (
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        </div>
+      ) : (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Mail className="w-5 h-5" />
+              Email Templates
+            </CardTitle>
+            <CardDescription>
+              Configure email templates for booking notifications
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Template Type</TableHead>
+                  <TableHead>Subject</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="w-[100px]">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {notifications?.map((notification) => (
+                  <TableRow key={notification.id}>
+                    <TableCell className="font-medium">
+                      {typeLabels[notification.type]}
+                    </TableCell>
+                    <TableCell className="max-w-[300px] truncate">
+                      {notification.subject}
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant={notification.isActive ? 'default' : 'secondary'}>
+                        {notification.isActive ? 'Active' : 'Inactive'}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleEdit(notification)}
+                      >
+                        <Edit className="w-4 h-4" />
+                      </Button>
+                    </TableCell>
                   </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {notificationTemplates.map((template) => (
-                    <TableRow key={template.id}>
-                      <TableCell>{template.name}</TableCell>
-                      <TableCell className="capitalize">{template.type}</TableCell>
-                      <TableCell>{template.subject}</TableCell>
-                      <TableCell>
-                        <div className="flex gap-2">
-                          <Button size="sm" variant="outline">
-                            <Edit className="w-4 h-4" />
-                          </Button>
-                          <Button size="sm" variant="outline">
-                            <Trash className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </TabsContent>
+                ))}
+                {(!notifications || notifications.length === 0) && (
+                  <TableRow>
+                    <TableCell colSpan={4} className="text-center text-muted-foreground py-8">
+                      No notification templates found
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      )}
 
-        <TabsContent value="settings" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Notification Settings</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label>Send booking confirmation emails</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Automatically send confirmation when bookings are approved
-                    </p>
-                  </div>
-                  <Button variant="outline">Enabled</Button>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label>Send reminder emails</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Send reminders 24 hours before the appointment
-                    </p>
-                  </div>
-                  <Button variant="outline">Enabled</Button>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label>In-app notifications</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Show notifications in the client dashboard
-                    </p>
-                  </div>
-                  <Button variant="outline">Enabled</Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+      {/* Variable Reference */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Template Variables</CardTitle>
+          <CardDescription>
+            Use these placeholders in your email templates
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="p-3 rounded-lg bg-muted/50">
+              <code className="text-sm">{'{{firstName}}'}</code>
+              <p className="text-xs text-muted-foreground mt-1">Customer first name</p>
+            </div>
+            <div className="p-3 rounded-lg bg-muted/50">
+              <code className="text-sm">{'{{lastName}}'}</code>
+              <p className="text-xs text-muted-foreground mt-1">Customer last name</p>
+            </div>
+            <div className="p-3 rounded-lg bg-muted/50">
+              <code className="text-sm">{'{{reference}}'}</code>
+              <p className="text-xs text-muted-foreground mt-1">Booking reference</p>
+            </div>
+            <div className="p-3 rounded-lg bg-muted/50">
+              <code className="text-sm">{'{{date}}'}</code>
+              <p className="text-xs text-muted-foreground mt-1">Appointment date</p>
+            </div>
+            <div className="p-3 rounded-lg bg-muted/50">
+              <code className="text-sm">{'{{time}}'}</code>
+              <p className="text-xs text-muted-foreground mt-1">Appointment time</p>
+            </div>
+            <div className="p-3 rounded-lg bg-muted/50">
+              <code className="text-sm">{'{{package}}'}</code>
+              <p className="text-xs text-muted-foreground mt-1">Service package</p>
+            </div>
+            <div className="p-3 rounded-lg bg-muted/50">
+              <code className="text-sm">{'{{totalPrice}}'}</code>
+              <p className="text-xs text-muted-foreground mt-1">Total price</p>
+            </div>
+            <div className="p-3 rounded-lg bg-muted/50">
+              <code className="text-sm">{'{{vehicleType}}'}</code>
+              <p className="text-xs text-muted-foreground mt-1">Vehicle type</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Edit Dialog */}
+      <Dialog open={!!editingNotification} onOpenChange={() => setEditingNotification(null)}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>
+              Edit {editingNotification && typeLabels[editingNotification.type]}
+            </DialogTitle>
+            <DialogDescription>
+              Update the email template for this notification type
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="isActive">Enable this notification</Label>
+              <Switch
+                id="isActive"
+                checked={formData.isActive}
+                onCheckedChange={(checked) =>
+                  setFormData((prev) => ({ ...prev, isActive: checked }))
+                }
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="subject">Subject</Label>
+              <Input
+                id="subject"
+                value={formData.subject}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, subject: e.target.value }))
+                }
+                placeholder="Email subject line"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="body">Body</Label>
+              <Textarea
+                id="body"
+                value={formData.body}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, body: e.target.value }))
+                }
+                rows={10}
+                placeholder="Email body content (HTML supported)"
+              />
+            </div>
+            <div className="flex justify-end gap-2 pt-4">
+              <Button
+                variant="outline"
+                onClick={() => setEditingNotification(null)}
+                disabled={updateMutation.isPending}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleSave}
+                disabled={updateMutation.isPending}
+              >
+                {updateMutation.isPending ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Saving...
+                  </>
+                ) : (
+                  'Save Changes'
+                )}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
