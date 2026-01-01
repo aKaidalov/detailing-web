@@ -92,7 +92,7 @@ export function AdminAddOns() {
       price: item.price.toString(),
       displayOrder: item.displayOrder.toString(),
       isActive: item.isActive,
-      packageIds: packages?.map((p) => p.id) || [],
+      packageIds: item.packageIds || [],
     });
     setDialogOpen(true);
   };

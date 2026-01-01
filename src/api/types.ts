@@ -17,6 +17,7 @@ export interface Package {
   price: number;
   displayOrder: number;
   isActive: boolean;
+  vehicleTypeIds: number[] | null;
 }
 
 // Add-on
@@ -27,6 +28,7 @@ export interface AddOn {
   price: number;
   displayOrder: number;
   isActive: boolean;
+  packageIds: number[] | null;
 }
 
 // Delivery Type

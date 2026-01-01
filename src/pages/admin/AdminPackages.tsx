@@ -92,7 +92,7 @@ export function AdminPackages() {
       price: item.price.toString(),
       displayOrder: item.displayOrder.toString(),
       isActive: item.isActive,
-      vehicleTypeIds: vehicleTypes?.map((vt) => vt.id) || [],
+      vehicleTypeIds: item.vehicleTypeIds || [],
     });
     setDialogOpen(true);
   };
