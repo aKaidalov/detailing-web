@@ -38,13 +38,13 @@ export function AdminDashboard() {
   // Filter pending bookings
   const pendingBookings = (allBookings || []).filter((b) => b.status === 'PENDING');
 
-  // Prepare pie chart data
+  // Prepare pie chart data - colors match status badges in AdminBookings
   const statusData = bookingStats
     ? [
-        { name: 'Pending', value: bookingStats.pendingCount, color: 'hsl(var(--chart-1))' },
-        { name: 'Confirmed', value: bookingStats.confirmedCount, color: 'hsl(var(--chart-2))' },
-        { name: 'Completed', value: bookingStats.completedCount, color: 'hsl(var(--chart-3))' },
-        { name: 'Cancelled', value: bookingStats.cancelledCount, color: 'hsl(var(--chart-4))' },
+        { name: 'Pending', value: bookingStats.pendingCount, color: '#eab308' },    // yellow-500
+        { name: 'Confirmed', value: bookingStats.confirmedCount, color: '#22c55e' }, // green-500
+        { name: 'Completed', value: bookingStats.completedCount, color: '#6b7280' }, // gray-500
+        { name: 'Cancelled', value: bookingStats.cancelledCount, color: '#ef4444' }, // red-500
       ].filter((item) => item.value > 0)
     : [];
 
@@ -211,14 +211,14 @@ export function AdminDashboard() {
                 </div>
                 <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
                   <div className="flex items-center gap-3">
-                    <CheckCircle className="w-5 h-5 text-blue-500" />
+                    <CheckCircle className="w-5 h-5 text-green-500" />
                     <span>Confirmed</span>
                   </div>
                   <span className="font-bold">{bookingStats?.confirmedCount ?? 0}</span>
                 </div>
                 <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
                   <div className="flex items-center gap-3">
-                    <CheckCircle className="w-5 h-5 text-green-500" />
+                    <CheckCircle className="w-5 h-5 text-gray-500" />
                     <span>Completed</span>
                   </div>
                   <span className="font-bold">{bookingStats?.completedCount ?? 0}</span>
