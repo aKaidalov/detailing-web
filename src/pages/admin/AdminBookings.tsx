@@ -58,7 +58,8 @@ const getStatusColor = (status: BookingStatus) => {
   }
 };
 
-const formatDate = (dateStr: string) => {
+const formatDate = (dateStr: string | null | undefined) => {
+  if (!dateStr) return '—';
   return new Date(dateStr).toLocaleDateString('en-GB', {
     day: '2-digit',
     month: 'short',
@@ -66,7 +67,8 @@ const formatDate = (dateStr: string) => {
   });
 };
 
-const formatTime = (timeStr: string) => {
+const formatTime = (timeStr: string | null | undefined) => {
+  if (!timeStr) return '—';
   // timeStr is "HH:mm:ss" or "HH:mm"
   return timeStr.substring(0, 5);
 };
@@ -164,6 +166,8 @@ export function AdminBookings() {
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
+            id="searchQuery"
+            name="searchQuery"
             placeholder="Search by name, email, or reference..."
             className="pl-10"
             value={searchQuery}
