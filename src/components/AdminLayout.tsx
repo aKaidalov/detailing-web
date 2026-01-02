@@ -12,9 +12,7 @@ import {
   LayoutDashboard,
   Calendar,
   Clock,
-  Users,
   Settings,
-  BarChart3,
   Bell,
   Car,
   Package,
@@ -23,6 +21,7 @@ import {
   User,
   LogOut,
   Home,
+  UserCircle,
 } from 'lucide-react';
 
 const menuItems = [
@@ -62,24 +61,19 @@ const menuItems = [
     path: '/admin/timeslots',
   },
   {
-    title: 'Users',
-    icon: Users,
-    path: '/admin/users',
-  },
-  {
     title: 'Notifications',
     icon: Bell,
     path: '/admin/notifications',
   },
   {
-    title: 'Statistics',
-    icon: BarChart3,
-    path: '/admin/statistics',
-  },
-  {
     title: 'Settings',
     icon: Settings,
     path: '/admin/settings',
+  },
+  {
+    title: 'Profile',
+    icon: UserCircle,
+    path: '/admin/profile',
   },
 ];
 

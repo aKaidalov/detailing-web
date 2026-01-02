@@ -68,3 +68,6 @@ export { useNotifications, useUpdateNotification } from './useNotifications';
 
 // Business settings hooks
 export { useBusinessSettings, useUpdateBusinessSettings } from './useBusinessSettings';
+
+// Profile hooks
+export { useChangePassword } from './useChangePassword';

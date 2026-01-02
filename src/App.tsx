@@ -19,9 +19,8 @@ import { AdminPackages } from './pages/admin/AdminPackages';
 import { AdminAddOns } from './pages/admin/AdminAddOns';
 import { AdminDeliveryTypes } from './pages/admin/AdminDeliveryTypes';
 import { AdminTimeSlots } from './pages/admin/AdminTimeSlots';
-import { AdminUsers } from './pages/admin/AdminUsers';
+import { AdminProfile } from './pages/admin/AdminProfile';
 import { AdminNotifications } from './pages/admin/AdminNotifications';
-import { AdminStatistics } from './pages/admin/AdminStatistics';
 import { AdminSettings } from './pages/admin/AdminSettings';
 import { Toaster } from './components/ui/sonner';
 
@@ -87,9 +86,8 @@ function AppRoutes() {
         <Route path="add-ons" element={<AdminAddOns />} />
         <Route path="delivery-types" element={<AdminDeliveryTypes />} />
         <Route path="timeslots" element={<AdminTimeSlots />} />
-        <Route path="users" element={<AdminUsers />} />
+        <Route path="profile" element={<AdminProfile />} />
         <Route path="notifications" element={<AdminNotifications />} />
-        <Route path="statistics" element={<AdminStatistics />} />
         <Route path="settings" element={<AdminSettings />} />
       </Route>
     </Routes>
