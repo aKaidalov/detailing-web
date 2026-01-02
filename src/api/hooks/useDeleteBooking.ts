@@ -10,6 +10,8 @@ export function useDeleteBooking() {
       queryClient.invalidateQueries({ queryKey: ['adminBookings'] });
       queryClient.invalidateQueries({ queryKey: ['bookingAnalytics'] });
       queryClient.invalidateQueries({ queryKey: ['revenueAnalytics'] });
+      queryClient.invalidateQueries({ queryKey: ['timeSlots'] });
+      queryClient.invalidateQueries({ queryKey: ['adminTimeSlots'] });
     },
   });
 }

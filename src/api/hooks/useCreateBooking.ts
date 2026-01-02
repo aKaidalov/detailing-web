@@ -13,6 +13,7 @@ export function useCreateBooking() {
       queryClient.invalidateQueries({ queryKey: ['bookingAnalytics'] });
       queryClient.invalidateQueries({ queryKey: ['revenueAnalytics'] });
       queryClient.invalidateQueries({ queryKey: ['timeSlots'] });
+      queryClient.invalidateQueries({ queryKey: ['adminTimeSlots'] });
     },
   });
 }
