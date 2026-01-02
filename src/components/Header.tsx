@@ -16,7 +16,13 @@ export function Header() {
 
   const isBookingPage = location.pathname.startsWith('/booking');
   const isAdminLoginPage = location.pathname === '/admin/login';
+  const isAdminPage = location.pathname.startsWith('/admin') && !isAdminLoginPage;
   const hideBookButton = isBookingPage || isAdminLoginPage;
+
+  // Hide header on admin pages (AdminLayout has its own navigation)
+  if (isAdminPage) {
+    return null;
+  }
 
   const handleLogout = () => {
     logout();
