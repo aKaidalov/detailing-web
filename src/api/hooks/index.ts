@@ -4,6 +4,8 @@ export { useAddOns } from './useAddOns';
 export { useDeliveryTypes } from './useDeliveryTypes';
 export { useTimeSlots } from './useTimeSlots';
 export { useCreateBooking } from './useCreateBooking';
+export { useBookingByReference } from './useBookingByReference';
+export { useCancelBooking } from './useCancelBooking';
 export { useLogin } from './useLogin';
 export { useLogout } from './useLogout';
 
