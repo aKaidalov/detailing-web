@@ -1,6 +1,12 @@
 const API_BASE_URL = '/api/v1';
 
 async function handleResponse<T>(response: Response): Promise<T> {
+  // Handle auth failures - dispatch event for AuthContext to handle
+  if (response.status === 401 || response.status === 403) {
+    window.dispatchEvent(new CustomEvent('auth:failure'));
+    throw new Error('Session expired');
+  }
+
   if (!response.ok) {
     const error = await response.text();
     throw new Error(error || `HTTP error! status: ${response.status}`);

@@ -1,32 +1,43 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { api } from '../api/client';
-import type { LoginResponse, UserRole } from '../api/types';
-
-interface User {
-  email: string;
-  role: UserRole;
-}
-
-interface AuthContextType {
-  user: User | null;
-  isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
-}
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+import type { LoginResponse } from '../api/types';
+import { AuthContext } from './authTypes';
+import type { User } from './authTypes';
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check for stored user session
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-    setIsLoading(false);
+    // Validate session with backend on mount
+    const validateSession = async () => {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        try {
+          // Call backend to verify session is still valid
+          const response = await api.get<LoginResponse>('/admin/me');
+          // Use fresh data from backend
+          setUser({ email: response.email, role: response.role });
+        } catch {
+          // Session invalid - clear everything
+          localStorage.removeItem('user');
+          setUser(null);
+        }
+      }
+      setIsLoading(false);
+    };
+    validateSession();
+  }, []);
+
+  // Listen for auth failures from API client (e.g., session expired mid-use)
+  useEffect(() => {
+    const handleAuthFailure = () => {
+      localStorage.removeItem('user');
+      setUser(null);
+    };
+
+    window.addEventListener('auth:failure', handleAuthFailure);
+    return () => window.removeEventListener('auth:failure', handleAuthFailure);
   }, []);
 
   const login = async (email: string, password: string) => {
@@ -49,12 +60,4 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       {children}
     </AuthContext.Provider>
   );
-}
-
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
 }
