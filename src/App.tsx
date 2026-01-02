@@ -9,8 +9,6 @@ import { Login } from './pages/Login';
 import { Booking } from './pages/Booking';
 import { BookingSuccess } from './pages/BookingSuccess';
 import { CancelBooking } from './pages/CancelBooking';
-import { ClientDashboard } from './pages/ClientDashboard';
-import { BookingDetail } from './pages/BookingDetail';
 import { AdminLayout } from './components/AdminLayout';
 import { AdminDashboard } from './pages/admin/AdminDashboard';
 import { AdminBookings } from './pages/admin/AdminBookings';
@@ -52,23 +50,6 @@ function AppRoutes() {
       <Route path="/booking/success" element={<BookingSuccess />} />
       <Route path="/cancel/:reference" element={<CancelBooking />} />
 
-      {/* Client routes */}
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoute>
-            <ClientDashboard />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/booking/:id"
-        element={
-          <ProtectedRoute>
-            <BookingDetail />
-          </ProtectedRoute>
-        }
-      />
 
       {/* Admin routes */}
       <Route
