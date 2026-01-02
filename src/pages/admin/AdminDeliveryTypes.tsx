@@ -176,12 +176,13 @@ export function AdminDeliveryTypes() {
               No delivery types found
             </div>
           ) : (
+            <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Name</TableHead>
                   <TableHead>Price</TableHead>
-                  <TableHead>Requires Address</TableHead>
+                  <TableHead className="hidden md:table-cell">Requires Address</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
@@ -193,7 +194,7 @@ export function AdminDeliveryTypes() {
                     <TableCell>
                       {item.price === 0 ? 'Free' : `€${item.price.toFixed(2)}`}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="hidden md:table-cell">
                       {item.requiresAddress ? (
                         <Badge className="bg-blue-500/10 text-blue-600">Yes</Badge>
                       ) : (
@@ -229,6 +230,7 @@ export function AdminDeliveryTypes() {
                 ))}
               </TableBody>
             </Table>
+            </div>
           )}
         </CardContent>
       </Card>

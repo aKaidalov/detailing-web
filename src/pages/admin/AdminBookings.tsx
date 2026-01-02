@@ -191,15 +191,16 @@ export function AdminBookings() {
               No bookings found
             </div>
           ) : (
+            <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Reference</TableHead>
                   <TableHead>Client</TableHead>
-                  <TableHead>Service</TableHead>
-                  <TableHead>Date & Time</TableHead>
+                  <TableHead className="hidden md:table-cell">Service</TableHead>
+                  <TableHead className="hidden md:table-cell">Date & Time</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead>Price</TableHead>
+                  <TableHead className="hidden md:table-cell">Price</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -215,13 +216,13 @@ export function AdminBookings() {
                         <p className="text-sm text-muted-foreground">{booking.email}</p>
                       </div>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="hidden md:table-cell">
                       <div>
                         <p>{booking.packageName}</p>
                         <p className="text-sm text-muted-foreground">{booking.vehicleTypeName}</p>
                       </div>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="hidden md:table-cell">
                       <div>
                         <p>{formatDate(booking.timeSlotDate)}</p>
                         <p className="text-sm text-muted-foreground">
@@ -234,7 +235,7 @@ export function AdminBookings() {
                         {statusLabels[booking.status]}
                       </Badge>
                     </TableCell>
-                    <TableCell className="font-medium">
+                    <TableCell className="hidden md:table-cell font-medium">
                       €{booking.totalPrice.toFixed(2)}
                     </TableCell>
                     <TableCell>
@@ -286,6 +287,7 @@ export function AdminBookings() {
                 ))}
               </TableBody>
             </Table>
+            </div>
           )}
         </CardContent>
       </Card>

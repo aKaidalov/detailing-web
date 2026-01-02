@@ -185,14 +185,15 @@ export function AdminVehicleTypes() {
               No vehicle types found
             </div>
           ) : (
+            <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Name</TableHead>
-                  <TableHead>Description</TableHead>
+                  <TableHead className="hidden md:table-cell">Description</TableHead>
                   <TableHead>Base Price</TableHead>
-                  <TableHead>Deliverable</TableHead>
-                  <TableHead>Order</TableHead>
+                  <TableHead className="hidden md:table-cell">Deliverable</TableHead>
+                  <TableHead className="hidden md:table-cell">Order</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
@@ -201,18 +202,18 @@ export function AdminVehicleTypes() {
                 {vehicleTypes.map((item) => (
                   <TableRow key={item.id}>
                     <TableCell className="font-medium">{item.name}</TableCell>
-                    <TableCell className="max-w-xs truncate text-muted-foreground">
+                    <TableCell className="hidden md:table-cell max-w-xs truncate text-muted-foreground">
                       {item.description || '-'}
                     </TableCell>
                     <TableCell>€{item.basePrice.toFixed(2)}</TableCell>
-                    <TableCell>
+                    <TableCell className="hidden md:table-cell">
                       {item.isDeliverable ? (
                         <Badge className="bg-green-500/10 text-green-600">Yes</Badge>
                       ) : (
                         <Badge className="bg-gray-500/10 text-gray-600">No</Badge>
                       )}
                     </TableCell>
-                    <TableCell>{item.displayOrder}</TableCell>
+                    <TableCell className="hidden md:table-cell">{item.displayOrder}</TableCell>
                     <TableCell>
                       {item.isActive ? (
                         <Badge className="bg-green-500/10 text-green-600">Active</Badge>
@@ -242,6 +243,7 @@ export function AdminVehicleTypes() {
                 ))}
               </TableBody>
             </Table>
+            </div>
           )}
         </CardContent>
       </Card>

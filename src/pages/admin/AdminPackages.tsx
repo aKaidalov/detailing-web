@@ -205,13 +205,14 @@ export function AdminPackages() {
               No packages found
             </div>
           ) : (
+            <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Name</TableHead>
-                  <TableHead>Description</TableHead>
+                  <TableHead className="hidden md:table-cell">Description</TableHead>
                   <TableHead>Price</TableHead>
-                  <TableHead>Order</TableHead>
+                  <TableHead className="hidden md:table-cell">Order</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
@@ -220,11 +221,11 @@ export function AdminPackages() {
                 {packages.map((item) => (
                   <TableRow key={item.id}>
                     <TableCell className="font-medium">{item.name}</TableCell>
-                    <TableCell className="max-w-xs truncate text-muted-foreground">
+                    <TableCell className="hidden md:table-cell max-w-xs truncate text-muted-foreground">
                       {item.description || '-'}
                     </TableCell>
                     <TableCell>€{item.price.toFixed(2)}</TableCell>
-                    <TableCell>{item.displayOrder}</TableCell>
+                    <TableCell className="hidden md:table-cell">{item.displayOrder}</TableCell>
                     <TableCell>
                       {item.isActive ? (
                         <Badge className="bg-green-500/10 text-green-600">Active</Badge>
@@ -254,6 +255,7 @@ export function AdminPackages() {
                 ))}
               </TableBody>
             </Table>
+            </div>
           )}
         </CardContent>
       </Card>

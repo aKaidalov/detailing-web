@@ -161,14 +161,15 @@ export function AdminDashboard() {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          <div className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>ID</TableHead>
                 <TableHead>Client</TableHead>
-                <TableHead>Service</TableHead>
-                <TableHead>Date & Time</TableHead>
-                <TableHead>Price</TableHead>
+                <TableHead className="hidden md:table-cell">Service</TableHead>
+                <TableHead className="hidden md:table-cell">Date & Time</TableHead>
+                <TableHead className="hidden md:table-cell">Price</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -177,11 +178,11 @@ export function AdminDashboard() {
                 <TableRow key={booking.id}>
                   <TableCell>#{booking.id}</TableCell>
                   <TableCell>{booking.clientName}</TableCell>
-                  <TableCell>{getServiceName(booking.service)}</TableCell>
-                  <TableCell>
+                  <TableCell className="hidden md:table-cell">{getServiceName(booking.service)}</TableCell>
+                  <TableCell className="hidden md:table-cell">
                     {new Date(booking.timeSlot).toLocaleString()}
                   </TableCell>
-                  <TableCell>€{booking.totalPrice}</TableCell>
+                  <TableCell className="hidden md:table-cell">€{booking.totalPrice}</TableCell>
                   <TableCell>
                     <div className="flex gap-2">
                       <Button size="sm" variant="outline">
@@ -196,6 +197,7 @@ export function AdminDashboard() {
               ))}
             </TableBody>
           </Table>
+          </div>
         </CardContent>
       </Card>
     </div>
