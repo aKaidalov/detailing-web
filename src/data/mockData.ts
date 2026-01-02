@@ -133,7 +133,7 @@ export const mockBookings: Booking[] = [
 ];
 
 export const generateTimeSlots = (daysAhead: number = 14) => {
-  const slots = [];
+  const slots: { id: string; date: string; time: string; available: boolean }[] = [];
   const times = ['09:00', '10:30', '12:00', '13:30', '15:00', '16:30'];
 
   for (let day = 1; day <= daysAhead; day++) {
@@ -141,7 +141,7 @@ export const generateTimeSlots = (daysAhead: number = 14) => {
     date.setDate(date.getDate() + day);
     const dateStr = date.toISOString().split('T')[0];
 
-    times.forEach((time, index) => {
+    times.forEach((time) => {
       slots.push({
         id: `${dateStr}-${time}`,
         date: dateStr,

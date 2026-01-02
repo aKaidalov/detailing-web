@@ -316,7 +316,7 @@ export function AdminVehicleTypes() {
                 <Switch
                   id="isDeliverable"
                   checked={formData.isDeliverable}
-                  onCheckedChange={(checked) =>
+                  onCheckedChange={(checked: boolean) =>
                     setFormData({ ...formData, isDeliverable: checked })
                   }
                 />
@@ -327,7 +327,7 @@ export function AdminVehicleTypes() {
                 <Switch
                   id="isActive"
                   checked={formData.isActive}
-                  onCheckedChange={(checked) =>
+                  onCheckedChange={(checked: boolean) =>
                     setFormData({ ...formData, isActive: checked })
                   }
                 />

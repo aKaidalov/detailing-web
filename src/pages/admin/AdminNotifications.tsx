@@ -204,7 +204,7 @@ export function AdminNotifications() {
               <Switch
                 id="isActive"
                 checked={formData.isActive}
-                onCheckedChange={(checked) =>
+                onCheckedChange={(checked: boolean) =>
                   setFormData((prev) => ({ ...prev, isActive: checked }))
                 }
               />

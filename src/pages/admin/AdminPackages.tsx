@@ -350,7 +350,7 @@ export function AdminPackages() {
               <Switch
                 id="isActive"
                 checked={formData.isActive}
-                onCheckedChange={(checked) =>
+                onCheckedChange={(checked: boolean) =>
                   setFormData({ ...formData, isActive: checked })
                 }
               />

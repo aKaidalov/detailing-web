@@ -33,13 +33,6 @@ export interface DeliveryOptionType {
   applicableVehicles: VehicleType[];
 }
 
-export interface TimeSlot {
-  id: string;
-  date: string;
-  time: string;
-  available: boolean;
-}
-
 export interface Booking {
   id: string;
   userId?: string;

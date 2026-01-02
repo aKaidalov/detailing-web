@@ -278,7 +278,7 @@ export function AdminDeliveryTypes() {
                 <Switch
                   id="requiresAddress"
                   checked={formData.requiresAddress}
-                  onCheckedChange={(checked) =>
+                  onCheckedChange={(checked: boolean) =>
                     setFormData({ ...formData, requiresAddress: checked })
                   }
                 />
@@ -289,7 +289,7 @@ export function AdminDeliveryTypes() {
                 <Switch
                   id="isActive"
                   checked={formData.isActive}
-                  onCheckedChange={(checked) =>
+                  onCheckedChange={(checked: boolean) =>
                     setFormData({ ...formData, isActive: checked })
                   }
                 />

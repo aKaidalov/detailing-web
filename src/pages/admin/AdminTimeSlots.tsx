@@ -493,7 +493,7 @@ export function AdminTimeSlots() {
               <Switch
                 id="isActive"
                 checked={templateForm.isActive}
-                onCheckedChange={(checked) =>
+                onCheckedChange={(checked: boolean) =>
                   setTemplateForm({ ...templateForm, isActive: checked })
                 }
               />
@@ -563,7 +563,7 @@ export function AdminTimeSlots() {
               <Label>Template</Label>
               <Select
                 value={slotForm.timeSlotTemplateId?.toString() || ''}
-                onValueChange={(value) =>
+                onValueChange={(value: string) =>
                   setSlotForm({ ...slotForm, timeSlotTemplateId: parseInt(value) })
                 }
               >

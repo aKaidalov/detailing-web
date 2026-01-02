@@ -1,9 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { Slot } from "@radix-ui/react-slot@1.1.2";
-import { VariantProps, cva } from "class-variance-authority@0.7.1";
-import { PanelLeftIcon } from "lucide-react@0.487.0";
+import { Slot } from "@radix-ui/react-slot";
+import { type VariantProps, cva } from "class-variance-authority";
+import { PanelLeftIcon } from "lucide-react";
 
 import { useIsMobile } from "./use-mobile";
 import { cn } from "./utils";
@@ -607,9 +607,11 @@ function SidebarMenuSkeleton({
   showIcon?: boolean;
 }) {
   // Random width between 50 to 90%.
+  /* eslint-disable react-hooks/purity */
   const width = React.useMemo(() => {
     return `${Math.floor(Math.random() * 40) + 50}%`;
   }, []);
+  /* eslint-enable react-hooks/purity */
 
   return (
     <div
@@ -722,5 +724,6 @@ export {
   SidebarRail,
   SidebarSeparator,
   SidebarTrigger,
+  /* eslint-disable-next-line react-refresh/only-export-components */
   useSidebar,
 };
