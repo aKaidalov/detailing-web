@@ -10,6 +10,10 @@ export function useCancelBooking() {
     mutationFn: (reference: string) => api.delete<void>(`/bookings/${reference}`),
     onSuccess: (_data, reference) => {
       queryClient.invalidateQueries({ queryKey: ['booking', reference] });
+      queryClient.invalidateQueries({ queryKey: ['adminBookings'] });
+      queryClient.invalidateQueries({ queryKey: ['bookingAnalytics'] });
+      queryClient.invalidateQueries({ queryKey: ['revenueAnalytics'] });
+      queryClient.invalidateQueries({ queryKey: ['timeSlots'] });
     },
   });
 }

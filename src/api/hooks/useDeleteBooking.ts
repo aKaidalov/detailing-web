@@ -8,6 +8,8 @@ export function useDeleteBooking() {
     mutationFn: (id: number) => api.delete<void>(`/admin/bookings/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['adminBookings'] });
+      queryClient.invalidateQueries({ queryKey: ['bookingAnalytics'] });
+      queryClient.invalidateQueries({ queryKey: ['revenueAnalytics'] });
     },
   });
 }

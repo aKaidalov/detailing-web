@@ -11,6 +11,8 @@ export function useUpdateBookingStatus() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['adminBookings'] });
       queryClient.invalidateQueries({ queryKey: ['adminBooking'] });
+      queryClient.invalidateQueries({ queryKey: ['bookingAnalytics'] });
+      queryClient.invalidateQueries({ queryKey: ['revenueAnalytics'] });
     },
   });
 }
