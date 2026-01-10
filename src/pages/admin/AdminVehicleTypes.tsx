@@ -44,6 +44,7 @@ import { toast } from 'sonner';
 
 type FormData = {
   name: string;
+  icon: string;
   description: string;
   basePrice: string;
   isDeliverable: boolean;
@@ -53,6 +54,7 @@ type FormData = {
 
 const emptyForm: FormData = {
   name: '',
+  icon: '',
   description: '',
   basePrice: '',
   isDeliverable: true,
@@ -62,6 +64,7 @@ const emptyForm: FormData = {
 
 type FormErrors = {
   name?: string;
+  icon?: string;
   basePrice?: string;
 };
 
@@ -81,6 +84,7 @@ export function AdminVehicleTypes() {
 
   const validateField = (field: keyof FormErrors, value: string): string | undefined => {
     if (field === 'name' && !value.trim()) return 'Name is required';
+    if (field === 'icon' && !value.trim()) return 'Icon is required';
     if (field === 'basePrice' && (!value.trim() || parseFloat(value) < 0)) return 'Valid price is required';
     return undefined;
   };
@@ -103,6 +107,7 @@ export function AdminVehicleTypes() {
     setEditingItem(item);
     setFormData({
       name: item.name,
+      icon: item.icon,
       description: item.description || '',
       basePrice: item.basePrice.toString(),
       isDeliverable: item.isDeliverable,
@@ -122,16 +127,18 @@ export function AdminVehicleTypes() {
   const handleSubmit = () => {
     // Validate all fields
     const nameError = validateField('name', formData.name);
+    const iconError = validateField('icon', formData.icon);
     const priceError = validateField('basePrice', formData.basePrice);
 
-    if (nameError || priceError) {
-      setErrors({ name: nameError, basePrice: priceError });
-      setTouched({ name: true, basePrice: true });
+    if (nameError || iconError || priceError) {
+      setErrors({ name: nameError, icon: iconError, basePrice: priceError });
+      setTouched({ name: true, icon: true, basePrice: true });
       return;
     }
 
     const data: CreateVehicleTypeRequest = {
       name: formData.name.trim(),
+      icon: formData.icon.trim(),
       description: formData.description.trim() || undefined,
       basePrice: parseFloat(formData.basePrice) || 0,
       isDeliverable: formData.isDeliverable,
@@ -217,6 +224,7 @@ export function AdminVehicleTypes() {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead className="w-12">Icon</TableHead>
                   <TableHead>Name</TableHead>
                   <TableHead className="hidden md:table-cell">Description</TableHead>
                   <TableHead>Base Price</TableHead>
@@ -229,6 +237,7 @@ export function AdminVehicleTypes() {
               <TableBody>
                 {vehicleTypes.map((item) => (
                   <TableRow key={item.id}>
+                    <TableCell className="text-2xl">{item.icon}</TableCell>
                     <TableCell className="font-medium">{item.name}</TableCell>
                     <TableCell className="hidden md:table-cell max-w-xs truncate text-muted-foreground">
                       {item.description || '-'}
@@ -291,19 +300,36 @@ export function AdminVehicleTypes() {
           </DialogHeader>
 
           <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Name *</Label>
-              <Input
-                id="name"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                onBlur={() => handleBlur('name')}
-                placeholder="e.g., Car, Van, Motorcycle"
-                aria-invalid={touched.name && !!errors.name}
-              />
-              {touched.name && errors.name && (
-                <p className="text-destructive text-sm">{errors.name}</p>
-              )}
+            <div className="grid grid-cols-[1fr,80px] gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="name">Name *</Label>
+                <Input
+                  id="name"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  onBlur={() => handleBlur('name')}
+                  placeholder="e.g., Car, Van, Motorcycle"
+                  aria-invalid={touched.name && !!errors.name}
+                />
+                {touched.name && errors.name && (
+                  <p className="text-destructive text-sm">{errors.name}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="icon">Icon *</Label>
+                <Input
+                  id="icon"
+                  value={formData.icon}
+                  onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
+                  onBlur={() => handleBlur('icon')}
+                  className="text-center text-2xl"
+                  aria-invalid={touched.icon && !!errors.icon}
+                />
+                {touched.icon && errors.icon && (
+                  <p className="text-destructive text-sm">{errors.icon}</p>
+                )}
+              </div>
             </div>
 
             <div className="space-y-2">

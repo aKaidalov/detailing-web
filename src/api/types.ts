@@ -2,6 +2,7 @@
 export interface VehicleType {
   id: number;
   name: string;
+  icon: string;
   description: string | null;
   basePrice: number;
   isDeliverable: boolean;
@@ -167,6 +168,7 @@ export interface BookingStatusUpdateRequest {
 // Admin CRUD Request Types
 export interface CreateVehicleTypeRequest {
   name: string;
+  icon: string;
   description?: string;
   basePrice: number;
   isDeliverable: boolean;
