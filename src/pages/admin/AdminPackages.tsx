@@ -62,12 +62,20 @@ const emptyForm: FormData = {
   vehicleTypeIds: [],
 };
 
+type FormErrors = {
+  name?: string;
+  price?: string;
+  vehicleTypeIds?: string;
+};
+
 export function AdminPackages() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<Package | null>(null);
   const [deletingItem, setDeletingItem] = useState<Package | null>(null);
   const [formData, setFormData] = useState<FormData>(emptyForm);
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
 
   const { data: packages, isLoading, error } = useAdminPackages();
   const { data: vehicleTypes } = useAdminVehicleTypes();
@@ -75,12 +83,27 @@ export function AdminPackages() {
   const updateMutation = useUpdatePackage();
   const deleteMutation = useDeletePackage();
 
+  const validateField = (field: keyof FormErrors, value: string | number[]): string | undefined => {
+    if (field === 'name' && !(value as string).trim()) return 'Name is required';
+    if (field === 'price' && (!(value as string).trim() || parseFloat(value as string) < 0)) return 'Valid price is required';
+    if (field === 'vehicleTypeIds' && (value as number[]).length === 0) return 'Select at least one vehicle type';
+    return undefined;
+  };
+
+  const handleBlur = (field: 'name' | 'price') => {
+    setTouched(prev => ({ ...prev, [field]: true }));
+    const value = formData[field];
+    setErrors(prev => ({ ...prev, [field]: validateField(field, value) }));
+  };
+
   const handleOpenCreate = () => {
     setEditingItem(null);
     setFormData({
       ...emptyForm,
       vehicleTypeIds: vehicleTypes?.map((vt) => vt.id) || [],
     });
+    setErrors({});
+    setTouched({});
     setDialogOpen(true);
   };
 
@@ -94,6 +117,8 @@ export function AdminPackages() {
       isActive: item.isActive,
       vehicleTypeIds: item.vehicleTypeIds || [],
     });
+    setErrors({});
+    setTouched({});
     setDialogOpen(true);
   };
 
@@ -112,6 +137,17 @@ export function AdminPackages() {
   };
 
   const handleSubmit = () => {
+    // Validate all fields
+    const nameError = validateField('name', formData.name);
+    const priceError = validateField('price', formData.price);
+    const vehicleTypesError = validateField('vehicleTypeIds', formData.vehicleTypeIds);
+
+    if (nameError || priceError || vehicleTypesError) {
+      setErrors({ name: nameError, price: priceError, vehicleTypeIds: vehicleTypesError });
+      setTouched({ name: true, price: true, vehicleTypeIds: true });
+      return;
+    }
+
     const data: CreatePackageRequest = {
       name: formData.name.trim(),
       description: formData.description.trim() || undefined,
@@ -120,16 +156,6 @@ export function AdminPackages() {
       isActive: formData.isActive,
       vehicleTypeIds: formData.vehicleTypeIds,
     };
-
-    if (!data.name) {
-      toast.error('Name is required');
-      return;
-    }
-
-    if (formData.vehicleTypeIds.length === 0) {
-      toast.error('Select at least one vehicle type');
-      return;
-    }
 
     if (editingItem) {
       updateMutation.mutate(
@@ -281,8 +307,13 @@ export function AdminPackages() {
                 id="name"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onBlur={() => handleBlur('name')}
                 placeholder="e.g., Full Wash, Premium Detail"
+                aria-invalid={touched.name && !!errors.name}
               />
+              {touched.name && errors.name && (
+                <p className="text-destructive text-sm">{errors.name}</p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -306,8 +337,13 @@ export function AdminPackages() {
                   min="0"
                   value={formData.price}
                   onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                  onBlur={() => handleBlur('price')}
                   placeholder="0.00"
+                  aria-invalid={touched.price && !!errors.price}
                 />
+                {touched.price && errors.price && (
+                  <p className="text-destructive text-sm">{errors.price}</p>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -325,7 +361,7 @@ export function AdminPackages() {
 
             <div className="space-y-2">
               <Label>Vehicle Types *</Label>
-              <div className="border rounded-md p-3 space-y-2">
+              <div className={`border rounded-md p-3 space-y-2 ${touched.vehicleTypeIds && errors.vehicleTypeIds ? 'border-destructive' : ''}`}>
                 {vehicleTypes?.map((vt) => (
                   <div key={vt.id} className="flex items-center gap-2">
                     <Checkbox
@@ -344,6 +380,9 @@ export function AdminPackages() {
                   </p>
                 )}
               </div>
+              {touched.vehicleTypeIds && errors.vehicleTypeIds && (
+                <p className="text-destructive text-sm">{errors.vehicleTypeIds}</p>
+              )}
             </div>
 
             <div className="flex items-center gap-2">

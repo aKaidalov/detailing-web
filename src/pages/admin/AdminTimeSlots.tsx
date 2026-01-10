@@ -466,7 +466,7 @@ export function AdminTimeSlots() {
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="startTime">Start Time</Label>
+                <Label htmlFor="startTime">Start Time *</Label>
                 <Input
                   id="startTime"
                   type="time"
@@ -477,7 +477,7 @@ export function AdminTimeSlots() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="endTime">End Time</Label>
+                <Label htmlFor="endTime">End Time *</Label>
                 <Input
                   id="endTime"
                   type="time"
@@ -560,7 +560,7 @@ export function AdminTimeSlots() {
 
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label>Template</Label>
+              <Label>Template *</Label>
               <Select
                 value={slotForm.timeSlotTemplateId?.toString() || ''}
                 onValueChange={(value: string) =>

@@ -55,21 +55,40 @@ const emptyForm: FormData = {
   isActive: true,
 };
 
+type FormErrors = {
+  name?: string;
+};
+
 export function AdminDeliveryTypes() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<DeliveryType | null>(null);
   const [deletingItem, setDeletingItem] = useState<DeliveryType | null>(null);
   const [formData, setFormData] = useState<FormData>(emptyForm);
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
 
   const { data: deliveryTypes, isLoading, error } = useAdminDeliveryTypes();
   const createMutation = useCreateDeliveryType();
   const updateMutation = useUpdateDeliveryType();
   const deleteMutation = useDeleteDeliveryType();
 
+  const validateField = (field: keyof FormErrors, value: string): string | undefined => {
+    if (field === 'name' && !value.trim()) return 'Name is required';
+    return undefined;
+  };
+
+  const handleBlur = (field: keyof FormErrors) => {
+    setTouched(prev => ({ ...prev, [field]: true }));
+    const value = formData[field];
+    setErrors(prev => ({ ...prev, [field]: validateField(field, value) }));
+  };
+
   const handleOpenCreate = () => {
     setEditingItem(null);
     setFormData(emptyForm);
+    setErrors({});
+    setTouched({});
     setDialogOpen(true);
   };
 
@@ -81,6 +100,8 @@ export function AdminDeliveryTypes() {
       requiresAddress: item.requiresAddress,
       isActive: item.isActive,
     });
+    setErrors({});
+    setTouched({});
     setDialogOpen(true);
   };
 
@@ -90,17 +111,21 @@ export function AdminDeliveryTypes() {
   };
 
   const handleSubmit = () => {
+    // Validate all fields
+    const nameError = validateField('name', formData.name);
+
+    if (nameError) {
+      setErrors({ name: nameError });
+      setTouched({ name: true });
+      return;
+    }
+
     const data: CreateDeliveryTypeRequest = {
       name: formData.name.trim(),
       price: parseFloat(formData.price) || 0,
       requiresAddress: formData.requiresAddress,
       isActive: formData.isActive,
     };
-
-    if (!data.name) {
-      toast.error('Name is required');
-      return;
-    }
 
     if (editingItem) {
       updateMutation.mutate(
@@ -256,8 +281,13 @@ export function AdminDeliveryTypes() {
                 id="name"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onBlur={() => handleBlur('name')}
                 placeholder="e.g., Pickup, Home Delivery"
+                aria-invalid={touched.name && !!errors.name}
               />
+              {touched.name && errors.name && (
+                <p className="text-destructive text-sm">{errors.name}</p>
+              )}
             </div>
 
             <div className="space-y-2">

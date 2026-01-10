@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Card, CardContent } from '../ui/card';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
@@ -12,6 +13,7 @@ interface DeliveryStepProps {
 }
 
 export function DeliveryStep({ vehicleTypeId, selectedId, address, onSelect }: DeliveryStepProps) {
+  const [addressTouched, setAddressTouched] = useState(false);
   const { data: deliveryTypes, isLoading, error } = useDeliveryTypes();
   const { data: vehicleTypes } = useVehicleTypes();
 
@@ -22,6 +24,14 @@ export function DeliveryStep({ vehicleTypeId, selectedId, address, onSelect }: D
   // Find selected delivery type to check if address is required
   const selectedDelivery = deliveryTypes?.find((d) => d.id === selectedId);
   const requiresAddress = selectedDelivery?.requiresAddress ?? false;
+
+  // Address validation
+  const addressError = requiresAddress && !address.trim() ? 'This field is required' : undefined;
+  const showAddressError = addressTouched && !!addressError;
+
+  const handleAddressBlur = () => {
+    setAddressTouched(true);
+  };
 
   // Map icons based on common delivery type patterns
   const getIcon = (name: string) => {
@@ -100,9 +110,14 @@ export function DeliveryStep({ vehicleTypeId, selectedId, address, onSelect }: D
             type="text"
             value={address}
             onChange={(e) => onSelect(selectedId!, e.target.value)}
+            onBlur={handleAddressBlur}
             placeholder="Enter your address for pickup"
+            aria-invalid={showAddressError}
             required
           />
+          {showAddressError && (
+            <p className="text-destructive text-sm">{addressError}</p>
+          )}
         </div>
       )}
     </div>

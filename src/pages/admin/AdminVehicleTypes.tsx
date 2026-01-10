@@ -60,21 +60,42 @@ const emptyForm: FormData = {
   isActive: true,
 };
 
+type FormErrors = {
+  name?: string;
+  basePrice?: string;
+};
+
 export function AdminVehicleTypes() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<VehicleType | null>(null);
   const [deletingItem, setDeletingItem] = useState<VehicleType | null>(null);
   const [formData, setFormData] = useState<FormData>(emptyForm);
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
 
   const { data: vehicleTypes, isLoading, error } = useAdminVehicleTypes();
   const createMutation = useCreateVehicleType();
   const updateMutation = useUpdateVehicleType();
   const deleteMutation = useDeleteVehicleType();
 
+  const validateField = (field: keyof FormErrors, value: string): string | undefined => {
+    if (field === 'name' && !value.trim()) return 'Name is required';
+    if (field === 'basePrice' && (!value.trim() || parseFloat(value) < 0)) return 'Valid price is required';
+    return undefined;
+  };
+
+  const handleBlur = (field: keyof FormErrors) => {
+    setTouched(prev => ({ ...prev, [field]: true }));
+    const value = formData[field];
+    setErrors(prev => ({ ...prev, [field]: validateField(field, value) }));
+  };
+
   const handleOpenCreate = () => {
     setEditingItem(null);
     setFormData(emptyForm);
+    setErrors({});
+    setTouched({});
     setDialogOpen(true);
   };
 
@@ -88,6 +109,8 @@ export function AdminVehicleTypes() {
       displayOrder: item.displayOrder.toString(),
       isActive: item.isActive,
     });
+    setErrors({});
+    setTouched({});
     setDialogOpen(true);
   };
 
@@ -97,6 +120,16 @@ export function AdminVehicleTypes() {
   };
 
   const handleSubmit = () => {
+    // Validate all fields
+    const nameError = validateField('name', formData.name);
+    const priceError = validateField('basePrice', formData.basePrice);
+
+    if (nameError || priceError) {
+      setErrors({ name: nameError, basePrice: priceError });
+      setTouched({ name: true, basePrice: true });
+      return;
+    }
+
     const data: CreateVehicleTypeRequest = {
       name: formData.name.trim(),
       description: formData.description.trim() || undefined,
@@ -105,11 +138,6 @@ export function AdminVehicleTypes() {
       displayOrder: parseInt(formData.displayOrder) || 0,
       isActive: formData.isActive,
     };
-
-    if (!data.name) {
-      toast.error('Name is required');
-      return;
-    }
 
     if (editingItem) {
       updateMutation.mutate(
@@ -269,8 +297,13 @@ export function AdminVehicleTypes() {
                 id="name"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onBlur={() => handleBlur('name')}
                 placeholder="e.g., Car, Van, Motorcycle"
+                aria-invalid={touched.name && !!errors.name}
               />
+              {touched.name && errors.name && (
+                <p className="text-destructive text-sm">{errors.name}</p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -294,8 +327,13 @@ export function AdminVehicleTypes() {
                   min="0"
                   value={formData.basePrice}
                   onChange={(e) => setFormData({ ...formData, basePrice: e.target.value })}
+                  onBlur={() => handleBlur('basePrice')}
                   placeholder="0.00"
+                  aria-invalid={touched.basePrice && !!errors.basePrice}
                 />
+                {touched.basePrice && errors.basePrice && (
+                  <p className="text-destructive text-sm">{errors.basePrice}</p>
+                )}
               </div>
 
               <div className="space-y-2">

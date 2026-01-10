@@ -62,12 +62,20 @@ const emptyForm: FormData = {
   packageIds: [],
 };
 
+type FormErrors = {
+  name?: string;
+  price?: string;
+  packageIds?: string;
+};
+
 export function AdminAddOns() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<AddOn | null>(null);
   const [deletingItem, setDeletingItem] = useState<AddOn | null>(null);
   const [formData, setFormData] = useState<FormData>(emptyForm);
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
 
   const { data: addOns, isLoading, error } = useAdminAddOns();
   const { data: packages } = useAdminPackages();
@@ -75,12 +83,27 @@ export function AdminAddOns() {
   const updateMutation = useUpdateAddOn();
   const deleteMutation = useDeleteAddOn();
 
+  const validateField = (field: keyof FormErrors, value: string | number[]): string | undefined => {
+    if (field === 'name' && !(value as string).trim()) return 'Name is required';
+    if (field === 'price' && (!(value as string).trim() || parseFloat(value as string) < 0)) return 'Valid price is required';
+    if (field === 'packageIds' && (value as number[]).length === 0) return 'Select at least one package';
+    return undefined;
+  };
+
+  const handleBlur = (field: 'name' | 'price') => {
+    setTouched(prev => ({ ...prev, [field]: true }));
+    const value = formData[field];
+    setErrors(prev => ({ ...prev, [field]: validateField(field, value) }));
+  };
+
   const handleOpenCreate = () => {
     setEditingItem(null);
     setFormData({
       ...emptyForm,
       packageIds: packages?.map((p) => p.id) || [],
     });
+    setErrors({});
+    setTouched({});
     setDialogOpen(true);
   };
 
@@ -94,6 +117,8 @@ export function AdminAddOns() {
       isActive: item.isActive,
       packageIds: item.packageIds || [],
     });
+    setErrors({});
+    setTouched({});
     setDialogOpen(true);
   };
 
@@ -112,6 +137,17 @@ export function AdminAddOns() {
   };
 
   const handleSubmit = () => {
+    // Validate all fields
+    const nameError = validateField('name', formData.name);
+    const priceError = validateField('price', formData.price);
+    const packageIdsError = validateField('packageIds', formData.packageIds);
+
+    if (nameError || priceError || packageIdsError) {
+      setErrors({ name: nameError, price: priceError, packageIds: packageIdsError });
+      setTouched({ name: true, price: true, packageIds: true });
+      return;
+    }
+
     const data: CreateAddOnRequest = {
       name: formData.name.trim(),
       description: formData.description.trim() || undefined,
@@ -120,16 +156,6 @@ export function AdminAddOns() {
       isActive: formData.isActive,
       packageIds: formData.packageIds,
     };
-
-    if (!data.name) {
-      toast.error('Name is required');
-      return;
-    }
-
-    if (formData.packageIds.length === 0) {
-      toast.error('Select at least one package');
-      return;
-    }
 
     if (editingItem) {
       updateMutation.mutate(
@@ -281,8 +307,13 @@ export function AdminAddOns() {
                 id="name"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onBlur={() => handleBlur('name')}
                 placeholder="e.g., Engine Cleaning, Ceramic Coating"
+                aria-invalid={touched.name && !!errors.name}
               />
+              {touched.name && errors.name && (
+                <p className="text-destructive text-sm">{errors.name}</p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -306,8 +337,13 @@ export function AdminAddOns() {
                   min="0"
                   value={formData.price}
                   onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                  onBlur={() => handleBlur('price')}
                   placeholder="0.00"
+                  aria-invalid={touched.price && !!errors.price}
                 />
+                {touched.price && errors.price && (
+                  <p className="text-destructive text-sm">{errors.price}</p>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -325,7 +361,7 @@ export function AdminAddOns() {
 
             <div className="space-y-2">
               <Label>Available for Packages *</Label>
-              <div className="border rounded-md p-3 space-y-2 max-h-40 overflow-y-auto">
+              <div className={`border rounded-md p-3 space-y-2 max-h-40 overflow-y-auto ${touched.packageIds && errors.packageIds ? 'border-destructive' : ''}`}>
                 {packages?.map((pkg) => (
                   <div key={pkg.id} className="flex items-center gap-2">
                     <Checkbox
@@ -344,6 +380,9 @@ export function AdminAddOns() {
                   </p>
                 )}
               </div>
+              {touched.packageIds && errors.packageIds && (
+                <p className="text-destructive text-sm">{errors.packageIds}</p>
+              )}
             </div>
 
             <div className="flex items-center gap-2">

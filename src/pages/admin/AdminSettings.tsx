@@ -18,8 +18,11 @@ export function AdminSettings() {
     address: '',
   });
   const [isDirty, setIsDirty] = useState(false);
+  const [errors, setErrors] = useState<{ name?: string }>({});
+  const [touched, setTouched] = useState<{ name?: boolean }>({});
 
-  // Populate form when data loads
+  // Populate form when data loads - setState is valid here for form initialization
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => {
     if (settings) {
       setFormData({
@@ -37,8 +40,26 @@ export function AdminSettings() {
     setIsDirty(true);
   };
 
+  const validateName = (value: string): string | undefined => {
+    if (!value.trim()) return 'Business name is required';
+    return undefined;
+  };
+
+  const handleBlur = (field: 'name') => {
+    setTouched(prev => ({ ...prev, [field]: true }));
+    if (field === 'name') {
+      setErrors(prev => ({ ...prev, name: validateName(formData.name) }));
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const nameError = validateName(formData.name);
+    if (nameError) {
+      setErrors({ name: nameError });
+      setTouched({ name: true });
+      return;
+    }
     await updateMutation.mutateAsync(formData);
     setIsDirty(false);
   };
@@ -78,13 +99,18 @@ export function AdminSettings() {
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4 max-w-2xl">
               <div className="space-y-2">
-                <Label htmlFor="name">Business Name</Label>
+                <Label htmlFor="name">Business Name *</Label>
                 <Input
                   id="name"
                   value={formData.name}
                   onChange={(e) => handleChange('name', e.target.value)}
+                  onBlur={() => handleBlur('name')}
                   placeholder="Your business name"
+                  aria-invalid={touched.name && !!errors.name}
                 />
+                {touched.name && errors.name && (
+                  <p className="text-destructive text-sm">{errors.name}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="phone">Phone Number</Label>
