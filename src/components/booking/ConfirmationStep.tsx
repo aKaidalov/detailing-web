@@ -15,10 +15,20 @@ interface ConfirmationStepProps {
   onUpdate: (updates: Partial<BookingData>) => void;
 }
 
+type FieldErrors = {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+  vehicleRegNumber?: string;
+};
+
 export function ConfirmationStep({ bookingData, onUpdate }: ConfirmationStepProps) {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [errors, setErrors] = useState<FieldErrors>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
 
   // Fetch all selected data for display
   const { data: vehicleTypes } = useVehicleTypes();
@@ -41,6 +51,48 @@ export function ConfirmationStep({ bookingData, onUpdate }: ConfirmationStepProp
   const deliveryPrice = selectedDelivery?.price || 0;
   const totalPrice = basePrice + packagePrice + addOnsPrice + deliveryPrice;
 
+  // Field validation
+  const validateField = (field: keyof FieldErrors, value: string): string | undefined => {
+    const trimmed = value.trim();
+    if (!trimmed) {
+      return 'This field is required';
+    }
+    if (field === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+      return 'Please enter a valid email address';
+    }
+    return undefined;
+  };
+
+  const handleBlur = (field: keyof FieldErrors) => {
+    setTouched(prev => ({ ...prev, [field]: true }));
+    const value = bookingData[field];
+    const error = validateField(field, value);
+    setErrors(prev => ({ ...prev, [field]: error }));
+  };
+
+  const validateAllFields = (): boolean => {
+    const fields: (keyof FieldErrors)[] = ['firstName', 'lastName', 'email', 'phone', 'vehicleRegNumber'];
+    const newErrors: FieldErrors = {};
+    let isValid = true;
+
+    fields.forEach(field => {
+      const error = validateField(field, bookingData[field]);
+      if (error) {
+        newErrors[field] = error;
+        isValid = false;
+      }
+    });
+
+    // Check address if required
+    if (selectedDelivery?.requiresAddress && !bookingData.address.trim()) {
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    setTouched({ firstName: true, lastName: true, email: true, phone: true, vehicleRegNumber: true });
+    return isValid;
+  };
+
   // Form validation
   const isFormValid = () => {
     return (
@@ -54,7 +106,7 @@ export function ConfirmationStep({ bookingData, onUpdate }: ConfirmationStepProp
   };
 
   const handleSubmit = async () => {
-    if (!isFormValid()) {
+    if (!validateAllFields()) {
       setSubmitError('Please fill in all required fields.');
       return;
     }
@@ -118,9 +170,13 @@ export function ConfirmationStep({ bookingData, onUpdate }: ConfirmationStepProp
                     type="text"
                     value={bookingData.firstName}
                     onChange={(e) => onUpdate({ firstName: e.target.value })}
+                    onBlur={() => handleBlur('firstName')}
                     placeholder="John"
-                    required
+                    aria-invalid={touched.firstName && !!errors.firstName}
                   />
+                  {touched.firstName && errors.firstName && (
+                    <p className="text-destructive text-sm">{errors.firstName}</p>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="lastName">Last Name *</Label>
@@ -129,9 +185,13 @@ export function ConfirmationStep({ bookingData, onUpdate }: ConfirmationStepProp
                     type="text"
                     value={bookingData.lastName}
                     onChange={(e) => onUpdate({ lastName: e.target.value })}
+                    onBlur={() => handleBlur('lastName')}
                     placeholder="Doe"
-                    required
+                    aria-invalid={touched.lastName && !!errors.lastName}
                   />
+                  {touched.lastName && errors.lastName && (
+                    <p className="text-destructive text-sm">{errors.lastName}</p>
+                  )}
                 </div>
               </div>
               <div className="space-y-2">
@@ -141,9 +201,13 @@ export function ConfirmationStep({ bookingData, onUpdate }: ConfirmationStepProp
                   type="email"
                   value={bookingData.email}
                   onChange={(e) => onUpdate({ email: e.target.value })}
+                  onBlur={() => handleBlur('email')}
                   placeholder="your@email.com"
-                  required
+                  aria-invalid={touched.email && !!errors.email}
                 />
+                {touched.email && errors.email && (
+                  <p className="text-destructive text-sm">{errors.email}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="phone">Phone Number *</Label>
@@ -152,9 +216,13 @@ export function ConfirmationStep({ bookingData, onUpdate }: ConfirmationStepProp
                   type="tel"
                   value={bookingData.phone}
                   onChange={(e) => onUpdate({ phone: e.target.value })}
+                  onBlur={() => handleBlur('phone')}
                   placeholder="+372 5555 5555"
-                  required
+                  aria-invalid={touched.phone && !!errors.phone}
                 />
+                {touched.phone && errors.phone && (
+                  <p className="text-destructive text-sm">{errors.phone}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="vehicleRegNumber">Vehicle Registration Number *</Label>
@@ -163,9 +231,13 @@ export function ConfirmationStep({ bookingData, onUpdate }: ConfirmationStepProp
                   type="text"
                   value={bookingData.vehicleRegNumber}
                   onChange={(e) => onUpdate({ vehicleRegNumber: e.target.value })}
+                  onBlur={() => handleBlur('vehicleRegNumber')}
                   placeholder="123ABC"
-                  required
+                  aria-invalid={touched.vehicleRegNumber && !!errors.vehicleRegNumber}
                 />
+                {touched.vehicleRegNumber && errors.vehicleRegNumber && (
+                  <p className="text-destructive text-sm">{errors.vehicleRegNumber}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="notes">Additional Comments</Label>

@@ -94,7 +94,7 @@ export function DeliveryStep({ vehicleTypeId, selectedId, address, onSelect }: D
       {/* Address input when required */}
       {requiresAddress && (
         <div className="mt-6 space-y-2">
-          <Label htmlFor="address">Pickup Address</Label>
+          <Label htmlFor="address">Pickup Address *</Label>
           <Input
             id="address"
             type="text"

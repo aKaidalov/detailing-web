@@ -10,6 +10,7 @@ import { DeliveryStep } from '../components/booking/DeliveryStep';
 import { ConfirmationStep } from '../components/booking/ConfirmationStep';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useDeliveryTypes } from '../api/hooks';
 
 // Booking state with numeric IDs for API
 export interface BookingData {
@@ -29,6 +30,7 @@ export interface BookingData {
 
 export function Booking() {
   const navigate = useNavigate();
+  const { data: deliveryTypes } = useDeliveryTypes();
   const [step, setStep] = useState(1);
   const [bookingData, setBookingData] = useState<BookingData>({
     vehicleTypeId: null,
@@ -59,8 +61,14 @@ export function Booking() {
         return true; // Add-ons are optional
       case 4:
         return bookingData.timeSlotId !== null;
-      case 5:
-        return bookingData.deliveryTypeId !== null;
+      case 5: {
+        if (bookingData.deliveryTypeId === null) return false;
+        const selectedDelivery = deliveryTypes?.find(d => d.id === bookingData.deliveryTypeId);
+        if (selectedDelivery?.requiresAddress && !bookingData.address.trim()) {
+          return false;
+        }
+        return true;
+      }
       default:
         return true;
     }
