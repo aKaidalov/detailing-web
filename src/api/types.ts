@@ -36,6 +36,7 @@ export interface AddOn {
 export interface DeliveryType {
   id: number;
   name: string;
+  icon: string;
   price: number;
   requiresAddress: boolean;
   isActive: boolean;
@@ -202,6 +203,7 @@ export type UpdateAddOnRequest = CreateAddOnRequest;
 
 export interface CreateDeliveryTypeRequest {
   name: string;
+  icon: string;
   price: number;
   requiresAddress: boolean;
   isActive: boolean;

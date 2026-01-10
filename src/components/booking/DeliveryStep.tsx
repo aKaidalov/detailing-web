@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Card, CardContent } from '../ui/card';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
-import { CheckCircle, Car, User } from 'lucide-react';
+import { CheckCircle } from 'lucide-react';
 import { useDeliveryTypes, useVehicleTypes } from '../../api/hooks';
 
 interface DeliveryStepProps {
@@ -33,15 +33,6 @@ export function DeliveryStep({ vehicleTypeId, selectedId, address, onSelect }: D
     setAddressTouched(true);
   };
 
-  // Map icons based on common delivery type patterns
-  const getIcon = (name: string) => {
-    const lowerName = name.toLowerCase();
-    if (lowerName.includes('pick') || lowerName.includes('delivery')) {
-      return Car;
-    }
-    return User;
-  };
-
   if (isLoading) {
     return (
       <div>
@@ -70,35 +61,32 @@ export function DeliveryStep({ vehicleTypeId, selectedId, address, onSelect }: D
     <div>
       <h3 className="mb-6">Delivery Option</h3>
       <div className="grid grid-cols-1 gap-4">
-        {availableOptions.map((option) => {
-          const Icon = getIcon(option.name);
-          return (
-            <Card
-              key={option.id}
-              className={`cursor-pointer transition-all hover:shadow-md ${
-                selectedId === option.id ? 'ring-2 ring-primary bg-primary/5' : ''
-              }`}
-              onClick={() => onSelect(option.id, address)}
-            >
-              <CardContent className="py-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <Icon className="w-6 h-6 text-primary" />
-                    <p>{option.name}</p>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="font-semibold">
-                      {option.price > 0 ? `+€${option.price}` : 'Free'}
-                    </span>
-                    {selectedId === option.id && (
-                      <CheckCircle className="w-6 h-6 text-primary" />
-                    )}
-                  </div>
+        {availableOptions.map((option) => (
+          <Card
+            key={option.id}
+            className={`cursor-pointer transition-all hover:shadow-md ${
+              selectedId === option.id ? 'ring-2 ring-primary bg-primary/5' : ''
+            }`}
+            onClick={() => onSelect(option.id, address)}
+          >
+            <CardContent className="py-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <span style={{ fontSize: '3rem' }}>{option.icon}</span>
+                  <p>{option.name}</p>
                 </div>
-              </CardContent>
-            </Card>
-          );
-        })}
+                <div className="flex items-center gap-3">
+                  <span className="font-semibold">
+                    {option.price > 0 ? `+€${option.price}` : 'Free'}
+                  </span>
+                  {selectedId === option.id && (
+                    <CheckCircle className="w-6 h-6 text-primary" />
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
       {/* Address input when required */}

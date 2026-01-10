@@ -43,6 +43,7 @@ import { toast } from 'sonner';
 
 type FormData = {
   name: string;
+  icon: string;
   price: string;
   requiresAddress: boolean;
   isActive: boolean;
@@ -50,6 +51,7 @@ type FormData = {
 
 const emptyForm: FormData = {
   name: '',
+  icon: '',
   price: '0',
   requiresAddress: false,
   isActive: true,
@@ -57,6 +59,7 @@ const emptyForm: FormData = {
 
 type FormErrors = {
   name?: string;
+  icon?: string;
 };
 
 export function AdminDeliveryTypes() {
@@ -75,6 +78,7 @@ export function AdminDeliveryTypes() {
 
   const validateField = (field: keyof FormErrors, value: string): string | undefined => {
     if (field === 'name' && !value.trim()) return 'Name is required';
+    if (field === 'icon' && !value.trim()) return 'Icon is required';
     return undefined;
   };
 
@@ -96,6 +100,7 @@ export function AdminDeliveryTypes() {
     setEditingItem(item);
     setFormData({
       name: item.name,
+      icon: item.icon,
       price: item.price.toString(),
       requiresAddress: item.requiresAddress,
       isActive: item.isActive,
@@ -113,15 +118,17 @@ export function AdminDeliveryTypes() {
   const handleSubmit = () => {
     // Validate all fields
     const nameError = validateField('name', formData.name);
+    const iconError = validateField('icon', formData.icon);
 
-    if (nameError) {
-      setErrors({ name: nameError });
-      setTouched({ name: true });
+    if (nameError || iconError) {
+      setErrors({ name: nameError, icon: iconError });
+      setTouched({ name: true, icon: true });
       return;
     }
 
     const data: CreateDeliveryTypeRequest = {
       name: formData.name.trim(),
+      icon: formData.icon.trim(),
       price: parseFloat(formData.price) || 0,
       requiresAddress: formData.requiresAddress,
       isActive: formData.isActive,
@@ -205,6 +212,7 @@ export function AdminDeliveryTypes() {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead className="w-12">Icon</TableHead>
                   <TableHead>Name</TableHead>
                   <TableHead>Price</TableHead>
                   <TableHead className="hidden md:table-cell">Requires Address</TableHead>
@@ -215,6 +223,7 @@ export function AdminDeliveryTypes() {
               <TableBody>
                 {deliveryTypes.map((item) => (
                   <TableRow key={item.id}>
+                    <TableCell className="text-2xl">{item.icon}</TableCell>
                     <TableCell className="font-medium">{item.name}</TableCell>
                     <TableCell>
                       {item.price === 0 ? 'Free' : `€${item.price.toFixed(2)}`}
@@ -275,19 +284,36 @@ export function AdminDeliveryTypes() {
           </DialogHeader>
 
           <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Name *</Label>
-              <Input
-                id="name"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                onBlur={() => handleBlur('name')}
-                placeholder="e.g., Pickup, Home Delivery"
-                aria-invalid={touched.name && !!errors.name}
-              />
-              {touched.name && errors.name && (
-                <p className="text-destructive text-sm">{errors.name}</p>
-              )}
+            <div className="grid grid-cols-[1fr,80px] gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="name">Name *</Label>
+                <Input
+                  id="name"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  onBlur={() => handleBlur('name')}
+                  placeholder="e.g., Pickup, Home Delivery"
+                  aria-invalid={touched.name && !!errors.name}
+                />
+                {touched.name && errors.name && (
+                  <p className="text-destructive text-sm">{errors.name}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="icon">Icon *</Label>
+                <Input
+                  id="icon"
+                  value={formData.icon}
+                  onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
+                  onBlur={() => handleBlur('icon')}
+                  className="text-center text-2xl"
+                  aria-invalid={touched.icon && !!errors.icon}
+                />
+                {touched.icon && errors.icon && (
+                  <p className="text-destructive text-sm">{errors.icon}</p>
+                )}
+              </div>
             </div>
 
             <div className="space-y-2">
