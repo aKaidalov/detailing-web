@@ -26,9 +26,12 @@ import { useNotifications, useUpdateNotification } from '../../api/hooks';
 import type { NotificationDto, NotificationType } from '../../api/types';
 
 const typeLabels: Record<NotificationType, string> = {
-  BOOKING_CONFIRMATION: 'Booking Confirmation',
-  BOOKING_MODIFICATION: 'Booking Modification',
-  BOOKING_CANCELLATION: 'Booking Cancellation',
+  BOOKING_CREATED: 'Booking Created',
+  BOOKING_CONFIRMED: 'Booking Confirmed',
+  BOOKING_MODIFIED: 'Booking Modified',
+  BOOKING_COMPLETED: 'Booking Completed',
+  BOOKING_CANCELLED_BY_CUSTOMER: 'Cancelled by Customer',
+  BOOKING_CANCELLED_BY_ADMIN: 'Cancelled by Admin',
 };
 
 export function AdminNotifications() {

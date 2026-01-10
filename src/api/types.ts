@@ -262,9 +262,12 @@ export interface RevenueAnalytics {
 
 // Notification Type (matches backend NotificationType enum)
 export type NotificationType =
-  | 'BOOKING_CONFIRMATION'
-  | 'BOOKING_MODIFICATION'
-  | 'BOOKING_CANCELLATION';
+  | 'BOOKING_CREATED'
+  | 'BOOKING_CONFIRMED'
+  | 'BOOKING_MODIFIED'
+  | 'BOOKING_COMPLETED'
+  | 'BOOKING_CANCELLED_BY_CUSTOMER'
+  | 'BOOKING_CANCELLED_BY_ADMIN';
 
 // Notification DTO (matches backend NotificationDto)
 export interface NotificationDto {

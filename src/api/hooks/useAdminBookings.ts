@@ -6,5 +6,6 @@ export function useAdminBookings() {
   return useQuery({
     queryKey: ['adminBookings'],
     queryFn: () => api.get<AdminBookingDto[]>('/admin/bookings'),
+    refetchInterval: 30 * 1000, // Poll every 30 seconds for real-time updates
   });
 }
