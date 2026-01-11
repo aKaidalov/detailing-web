@@ -1,8 +1,13 @@
 const API_BASE_URL = '/api/v1';
 
-async function handleResponse<T>(response: Response): Promise<T> {
-  // Handle auth failures - dispatch event for AuthContext to handle
+async function handleResponse<T>(response: Response, endpoint: string): Promise<T> {
+  // Handle auth failures
   if (response.status === 401 || response.status === 403) {
+    // Login endpoint - show credentials error, not session expired
+    if (endpoint === '/admin/login') {
+      throw new Error('Invalid email or password');
+    }
+    // Other endpoints - session expired
     window.dispatchEvent(new CustomEvent('auth:failure'));
     throw new Error('Session expired');
   }
@@ -24,7 +29,7 @@ export const api = {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       credentials: 'include',
     });
-    return handleResponse<T>(response);
+    return handleResponse<T>(response, endpoint);
   },
 
   async post<T>(endpoint: string, data?: unknown): Promise<T> {
@@ -36,7 +41,7 @@ export const api = {
       credentials: 'include',
       body: data ? JSON.stringify(data) : undefined,
     });
-    return handleResponse<T>(response);
+    return handleResponse<T>(response, endpoint);
   },
 
   async put<T>(endpoint: string, data?: unknown): Promise<T> {
@@ -48,7 +53,7 @@ export const api = {
       credentials: 'include',
       body: data ? JSON.stringify(data) : undefined,
     });
-    return handleResponse<T>(response);
+    return handleResponse<T>(response, endpoint);
   },
 
   async delete<T>(endpoint: string): Promise<T> {
@@ -56,6 +61,6 @@ export const api = {
       method: 'DELETE',
       credentials: 'include',
     });
-    return handleResponse<T>(response);
+    return handleResponse<T>(response, endpoint);
   },
 };

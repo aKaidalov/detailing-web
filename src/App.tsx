@@ -3,6 +3,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from './api/queryClient';
 import { AuthProvider } from './contexts/AuthContext';
 import { useAuth } from './contexts/useAuth';
+import ErrorBoundary from './components/ErrorBoundary';
 import { Header } from './components/Header';
 import { Landing } from './pages/Landing';
 import { Login } from './pages/Login';
@@ -77,16 +78,18 @@ function AppRoutes() {
 
 export default function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <AuthProvider>
-          <div className="min-h-screen bg-background">
-            <Header />
-            <AppRoutes />
-            <Toaster />
-          </div>
-        </AuthProvider>
-      </BrowserRouter>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <AuthProvider>
+            <div className="min-h-screen bg-background">
+              <Header />
+              <AppRoutes />
+              <Toaster />
+            </div>
+          </AuthProvider>
+        </BrowserRouter>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }
