@@ -75,7 +75,7 @@ export function PaginationControls({
   }
 
   return (
-    <div className="flex items-center justify-between py-6">
+    <div className="flex items-center justify-between pt-6 pb-4 border-t">
       {/* Left: Item count info */}
       <div className="text-sm text-muted-foreground">
         Showing {startItem}-{endItem} of {totalItems}
