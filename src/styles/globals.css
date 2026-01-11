@@ -188,3 +188,15 @@ html {
   font-size: var(--font-size);
 }
 
+/* Custom layout for Admin TimeSlots page */
+.timeslots-layout {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+@media (min-width: 1024px) {
+  .timeslots-layout {
+    flex-direction: row !important;
+  }
+}
+

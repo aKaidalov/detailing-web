@@ -290,8 +290,8 @@ export function AdminTimeSlots() {
 
         {/* Calendar Tab */}
         <TabsContent value="calendar" className="mt-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <Card>
+          <div className="flex flex-col timeslots-layout gap-6 items-start">
+            <Card className="w-fit shrink-0">
               <CardHeader>
                 <CardTitle>Select Date</CardTitle>
               </CardHeader>
@@ -305,7 +305,7 @@ export function AdminTimeSlots() {
               </CardContent>
             </Card>
 
-            <Card className="lg:col-span-2">
+            <Card className="flex-1 min-w-0 w-full">
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>
                   {selectedDate.toLocaleDateString('en-US', {
