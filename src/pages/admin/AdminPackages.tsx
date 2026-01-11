@@ -43,6 +43,8 @@ import {
 import type { Package, CreatePackageRequest } from '../../api/types';
 import { Plus, Edit, Trash, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { usePagination } from '../../hooks/usePagination';
+import { PaginationControls } from '../../components/PaginationControls';
 
 type FormData = {
   name: string;
@@ -82,6 +84,16 @@ export function AdminPackages() {
   const createMutation = useCreatePackage();
   const updateMutation = useUpdatePackage();
   const deleteMutation = useDeletePackage();
+
+  const {
+    paginatedData: paginatedPackages,
+    currentPage,
+    pageSize,
+    totalPages,
+    totalItems,
+    setPage,
+    setPageSize,
+  } = usePagination({ data: packages || [], defaultPageSize: 10 });
 
   const validateField = (field: keyof FormErrors, value: string | number[]): string | undefined => {
     if (field === 'name' && !(value as string).trim()) return 'Name is required';
@@ -226,11 +238,12 @@ export function AdminPackages() {
 
       <Card>
         <CardContent className="pt-6">
-          {!packages?.length ? (
+          {totalItems === 0 ? (
             <div className="text-center text-muted-foreground py-8">
               No packages found
             </div>
           ) : (
+            <>
             <div className="overflow-x-auto">
             <Table>
               <TableHeader>
@@ -244,7 +257,7 @@ export function AdminPackages() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {packages.map((item) => (
+                {paginatedPackages.map((item) => (
                   <TableRow key={item.id}>
                     <TableCell className="font-medium">{item.name}</TableCell>
                     <TableCell className="hidden md:table-cell max-w-xs truncate text-muted-foreground">
@@ -282,6 +295,15 @@ export function AdminPackages() {
               </TableBody>
             </Table>
             </div>
+            <PaginationControls
+              currentPage={currentPage}
+              totalPages={totalPages}
+              pageSize={pageSize}
+              totalItems={totalItems}
+              onPageChange={setPage}
+              onPageSizeChange={setPageSize}
+            />
+            </>
           )}
         </CardContent>
       </Card>

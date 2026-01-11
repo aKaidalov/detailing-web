@@ -32,6 +32,8 @@ import {
 } from '../../api/hooks';
 import type { AdminBookingDto, BookingStatus } from '../../api/types';
 import { Search, Eye, CheckCircle, XCircle, Loader2 } from 'lucide-react';
+import { usePagination } from '../../hooks/usePagination';
+import { PaginationControls } from '../../components/PaginationControls';
 import { toast } from 'sonner';
 
 const statusLabels: Record<BookingStatus, string> = {
@@ -94,6 +96,16 @@ export function AdminBookings() {
       booking.reference.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesStatus && matchesSearch;
   });
+
+  const {
+    paginatedData: paginatedBookings,
+    currentPage,
+    pageSize,
+    totalPages,
+    totalItems,
+    setPage,
+    setPageSize,
+  } = usePagination({ data: filteredBookings, defaultPageSize: 10 });
 
   const handleConfirm = (booking: AdminBookingDto) => {
     updateStatus.mutate(
@@ -190,11 +202,12 @@ export function AdminBookings() {
 
       <Card>
         <CardContent className="pt-6">
-          {filteredBookings.length === 0 ? (
+          {totalItems === 0 ? (
             <div className="text-center text-muted-foreground py-8">
               No bookings found
             </div>
           ) : (
+            <>
             <div className="overflow-x-auto">
             <Table>
               <TableHeader>
@@ -209,7 +222,7 @@ export function AdminBookings() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredBookings.map((booking) => (
+                {paginatedBookings.map((booking) => (
                   <TableRow key={booking.id}>
                     <TableCell className="font-mono text-sm">
                       {booking.reference}
@@ -292,6 +305,15 @@ export function AdminBookings() {
               </TableBody>
             </Table>
             </div>
+            <PaginationControls
+              currentPage={currentPage}
+              totalPages={totalPages}
+              pageSize={pageSize}
+              totalItems={totalItems}
+              onPageChange={setPage}
+              onPageSizeChange={setPageSize}
+            />
+            </>
           )}
         </CardContent>
       </Card>

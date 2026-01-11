@@ -41,6 +41,8 @@ import {
 import type { VehicleType, CreateVehicleTypeRequest } from '../../api/types';
 import { Plus, Edit, Trash, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { usePagination } from '../../hooks/usePagination';
+import { PaginationControls } from '../../components/PaginationControls';
 
 type FormData = {
   name: string;
@@ -81,6 +83,16 @@ export function AdminVehicleTypes() {
   const createMutation = useCreateVehicleType();
   const updateMutation = useUpdateVehicleType();
   const deleteMutation = useDeleteVehicleType();
+
+  const {
+    paginatedData: paginatedVehicleTypes,
+    currentPage,
+    pageSize,
+    totalPages,
+    totalItems,
+    setPage,
+    setPageSize,
+  } = usePagination({ data: vehicleTypes || [], defaultPageSize: 10 });
 
   const validateField = (field: keyof FormErrors, value: string): string | undefined => {
     if (field === 'name' && !value.trim()) return 'Name is required';
@@ -215,11 +227,12 @@ export function AdminVehicleTypes() {
 
       <Card>
         <CardContent className="pt-6">
-          {!vehicleTypes?.length ? (
+          {totalItems === 0 ? (
             <div className="text-center text-muted-foreground py-8">
               No vehicle types found
             </div>
           ) : (
+            <>
             <div className="overflow-x-auto">
             <Table>
               <TableHeader>
@@ -235,7 +248,7 @@ export function AdminVehicleTypes() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {vehicleTypes.map((item) => (
+                {paginatedVehicleTypes.map((item) => (
                   <TableRow key={item.id}>
                     <TableCell className="text-2xl">{item.icon}</TableCell>
                     <TableCell className="font-medium">{item.name}</TableCell>
@@ -281,6 +294,15 @@ export function AdminVehicleTypes() {
               </TableBody>
             </Table>
             </div>
+            <PaginationControls
+              currentPage={currentPage}
+              totalPages={totalPages}
+              pageSize={pageSize}
+              totalItems={totalItems}
+              onPageChange={setPage}
+              onPageSizeChange={setPageSize}
+            />
+            </>
           )}
         </CardContent>
       </Card>

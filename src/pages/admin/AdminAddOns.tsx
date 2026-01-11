@@ -43,6 +43,8 @@ import {
 import type { AddOn, CreateAddOnRequest } from '../../api/types';
 import { Plus, Edit, Trash, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { usePagination } from '../../hooks/usePagination';
+import { PaginationControls } from '../../components/PaginationControls';
 
 type FormData = {
   name: string;
@@ -82,6 +84,16 @@ export function AdminAddOns() {
   const createMutation = useCreateAddOn();
   const updateMutation = useUpdateAddOn();
   const deleteMutation = useDeleteAddOn();
+
+  const {
+    paginatedData: paginatedAddOns,
+    currentPage,
+    pageSize,
+    totalPages,
+    totalItems,
+    setPage,
+    setPageSize,
+  } = usePagination({ data: addOns || [], defaultPageSize: 10 });
 
   const validateField = (field: keyof FormErrors, value: string | number[]): string | undefined => {
     if (field === 'name' && !(value as string).trim()) return 'Name is required';
@@ -226,11 +238,12 @@ export function AdminAddOns() {
 
       <Card>
         <CardContent className="pt-6">
-          {!addOns?.length ? (
+          {totalItems === 0 ? (
             <div className="text-center text-muted-foreground py-8">
               No add-ons found
             </div>
           ) : (
+            <>
             <div className="overflow-x-auto">
             <Table>
               <TableHeader>
@@ -244,7 +257,7 @@ export function AdminAddOns() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {addOns.map((item) => (
+                {paginatedAddOns.map((item) => (
                   <TableRow key={item.id}>
                     <TableCell className="font-medium">{item.name}</TableCell>
                     <TableCell className="hidden md:table-cell max-w-xs truncate text-muted-foreground">
@@ -282,6 +295,15 @@ export function AdminAddOns() {
               </TableBody>
             </Table>
             </div>
+            <PaginationControls
+              currentPage={currentPage}
+              totalPages={totalPages}
+              pageSize={pageSize}
+              totalItems={totalItems}
+              onPageChange={setPage}
+              onPageSizeChange={setPageSize}
+            />
+            </>
           )}
         </CardContent>
       </Card>
